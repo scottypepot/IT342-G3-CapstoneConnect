@@ -6,4 +6,4 @@ a platform that helps people with similar skills and project interests find each
 # Member 1
 NAME: Jhovynn Aldrich Apurado
 COURSE & YEAR: BSIT - 3
-DESCRIPTION: A 21 year old BSIT student who only wants to do art rather than coding.  
+DESCRIPTION: A 21-year-old art enthusiast from Cebu, Philippines, passionate about creating and exploring all forms of art. Though currently studying BSIT, their heart belongs to drawing, painting, and digital art. Living in the vibrant city of Cebu, they are inspired by its rich culture, landscapes, and creativity. Art is their true calling, and they dream of pursuing a career where they can express themselves and bring their visions to life. Despite the challenges of balancing their studies, they always find time to nurture their artistic passion.
