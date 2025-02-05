@@ -5,7 +5,6 @@ a platform that helps people with similar skills and project interests find each
 # TEAM MEMBERS:
 
 
-=======
 # Member 1
 NAME: Scott Benzer Gitgano
 COURSE & YEAR: BSIT-3
