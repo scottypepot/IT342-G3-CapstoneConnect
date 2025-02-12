@@ -1,5 +1,24 @@
 # IT342-G3-CapstoneConnect
-a platform that helps people with similar skills and project interests find each other and work together. It lets users create profiles, match with others, chat, and form teams. On the web, you can use buttons to like or pass on profiles, while on mobile, you can swipe. It sends notifications for matches and messages, making collaboration easy.
+A platform that helps people with similar skills and project interests find each other and work together. It lets users create profiles, match with others, chat, and form teams. On the web, you can use buttons to like or pass on profiles, while on mobile, you can swipe. It sends notifications for matches and messages, making collaboration easy.
+
+# List of Features
+
+# WEB APPLICATION
+-> Button-Based Profile Interaction
+-> Profile Filtering
+-> Team Dashboard Management
+
+# MOBILE APPLICATION
+-> Swipe-to-Match Gestures
+-> Real-Time Push Notifications
+-> Team Dashboard Management
+
+# Links
+FIGMA 
+-> https://www.figma.com/design/iJ7flDUNXTtc1i8CskamDJ/CapstoneConnect?node-id=0-1&t=nngNEjinpHbTffcp-1
+
+DIAGRAMS 
+-> 
 
 
 # TEAM MEMBERS:
