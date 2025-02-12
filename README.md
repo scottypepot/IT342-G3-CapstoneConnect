@@ -3,15 +3,15 @@ A platform that helps people with similar skills and project interests find each
 
 # List of Features
 
-# WEB APPLICATION
--> Button-Based Profile Interaction
--> Profile Filtering
--> Team Dashboard Management
+### Web Application
+- **Button-Based Profile Interaction**
+- **Profile Filtering**
+- **Team Dashboard Management**
 
-# MOBILE APPLICATION
--> Swipe-to-Match Gestures
--> Real-Time Push Notifications
--> Team Dashboard Management
+### Mobile Application
+- **Swipe-to-Match Gestures**
+- **Real-Time Push Notifications**
+- **Team Dashboard Management**
 
 # Links
 FIGMA 
