@@ -1,4 +1,4 @@
-package com.example.capstoneconnect
+package com.capstoneconnect
 
 import org.junit.Test
 

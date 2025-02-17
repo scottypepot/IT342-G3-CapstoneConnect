@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Define the package name and any necessary permissions if required -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,21 +11,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstoneConnect"
-        tools:targetApi="34"> <!-- Updated to API 34 if targeting Android 14 (latest) -->
-
-        <!-- MainActivity that serves as the entry point of the app -->
+        tools:targetApi="31">
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.CapstoneConnect">
-
-            <!-- Intent filter to make MainActivity the launcher -->
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
