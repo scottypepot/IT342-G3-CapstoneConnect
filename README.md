@@ -18,7 +18,7 @@ FIGMA
 -> https://www.figma.com/design/iJ7flDUNXTtc1i8CskamDJ/CapstoneConnect?node-id=0-1&t=nngNEjinpHbTffcp-1
 
 DIAGRAMS 
--> 
+-> https://drive.google.com/drive/folders/1KfcFUV9hRxyE6USiwmXonqmtBatE-t2C?usp=sharing
 
 # TEAM MEMBERS: 
 
