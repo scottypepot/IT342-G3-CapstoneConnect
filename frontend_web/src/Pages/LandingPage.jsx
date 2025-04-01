@@ -118,7 +118,7 @@ export default function LandingPage() {
       </Container>
       </Box>
 
-      <Container id="how-it-works" sx={{ py: 6, marginTop: 20, scrollMarginTop: 100 }}>
+      <Container id="how-it-works" sx={{ py: 6, marginTop: 20, scrollMarginTop: 130 }}>
         <Typography variant="h5" fontWeight="600" gutterBottom>
           HOW IT WORKS
         </Typography>
@@ -164,7 +164,7 @@ export default function LandingPage() {
       </Container>
       </Box>
 
-      <Container id="features" sx={{ py: 6, marginTop: 19, scrollMarginTop: 100}}>
+      <Container id="features" sx={{ py: 6, marginTop: 19, scrollMarginTop: 130}}>
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           FEATURES
         </Typography>
@@ -208,7 +208,7 @@ export default function LandingPage() {
         </Grid>
       </Container>
 
-      <Container id="about" sx={{ py: 6, marginTop: 10,marginBottom: 2, scrollMarginTop: 100}}>
+      <Container id="about" sx={{ py: 6, marginTop: 10,marginBottom: 2, scrollMarginTop: 130}}>
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           ABOUT
         </Typography>
