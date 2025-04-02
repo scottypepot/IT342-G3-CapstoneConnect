@@ -29,5 +29,10 @@ NAME: Scott Benzer Gitgano
 
 COURSE & YEAR: BSIT - 3
 
+
+A 21-year-old art enthusiast from Cebu, Philippines, passionate about creating and exploring all forms of art. Though currently 
+studying BSIT, their heart belongs to drawing, painting, and digital art. Living in the vibrant city of Cebu, they are inspired by its rich culture, landscapes, and creativity. Art is their true calling, and they dream of pursuing a career where they can express themselves and bring their visions to life. Despite the challenges of balancing their studies, they always find time to nurture their artistic passion..
+
 A 20 Years old who likes to play video games and like to challenge himself. Playing games is one of my hobbies like there's no day without playing. I also like to 
 Challenge myself like learning new coding languages like javascript or react js. I know that learning that languages is not easy and you need to spend more time of it. Aside from that i also like watching videos like movies or series specifically kdrama or anime.
+
