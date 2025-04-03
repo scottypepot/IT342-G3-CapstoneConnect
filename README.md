@@ -40,11 +40,11 @@ COURSE & YEAR: BSIT-3
 A 20 year old BSIT student in CIT-University. Currently living in Tisa, Cebu City. I usually spend my day watching k-drama, playing computer games with friends when I'm not coding, and go to the gym. I also like to play basketball whenever my friends invite me to play with them. Matcha all day! 
 
 
-
 # Member 3
 NAME: Jhovynn Aldrich Apurado
-COURSE & YEAR: BSIT-3 
+
+COURSE & YEAR: BSIT - 3
 
 A 21-year-old art enthusiast from Cebu, Philippines, passionate about creating and exploring all forms of art. Though currently 
-studying BSIT, their heart belongs to drawing, painting, and digital art. Living in the vibrant city of Cebu, they are inspired by its rich culture, landscapes, and creativity. Art is their true calling, and they dream of pursuing a career where they can express themselves and bring their visions to life. Despite the challenges of balancing their studies, they always find time to nurture their artistic passion.
+studying BSIT, their heart belongs to drawing, painting, and digital art. Living in the vibrant city of Cebu, they are inspired by its rich culture, landscapes, and creativity. Art is their true calling, and they dream of pursuing a career where they can express themselves and bring their visions to life. Despite the challenges of balancing their studies, they always find time to nurture their artistic passion..
 
