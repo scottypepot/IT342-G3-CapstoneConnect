@@ -37,7 +37,7 @@ NAME: JOHN GERARD C. DONAIRE
 COURSE & YEAR: BSIT-3 
 
 
-A 20 year old BSIT student in CIT-University. Currently living in Tisa, Cebu City. Whenever I'm not coding, I usually spend my day watching k-drama, playing computer games with friends, and go to the gym. I also like to play basketball whenever my friends invite me to play with them. Matcha all day! 
+A 20 year old BSIT student in CIT-University. Currently living in Tisa, Cebu City. I usually spend my day watching k-drama, playing computer games with friends when I'm not coding, and go to the gym. I also like to play basketball whenever my friends invite me to play with them. Matcha all day! 
 
 
 
