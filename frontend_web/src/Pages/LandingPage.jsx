@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { AppBar, Toolbar, Button, Typography, Container, Box, Grid, Card, CardContent, Avatar } from '@mui/material';
 import '../styles/LandingCss.css';
 import groupImage from '../assets/groupimage.png';
@@ -10,6 +10,10 @@ import Notify from '../assets/notify.png';
 import Mobile from '../assets/mobile.png';
 import Acad from '../assets/acad.png';
 import { Helmet } from 'react-helmet';
+import SignUpModal from './SignUpModal';
+import LogInModal from './LogInModal';
+
+
 
 const developers = [
   {
@@ -54,6 +58,12 @@ const scrollToHome = () => {
   })
 }
 export default function LandingPage() {
+  const [modalType, setModalType] = useState(null);
+
+  const handleOpenModal = (type) => setModalType(type);
+  const handleCloseModal = () => setModalType(null);
+
+
   return (
     <>
       <Helmet>
@@ -61,7 +71,7 @@ export default function LandingPage() {
         <meta name="description" content="Swipe, match and collaborate with classmates" />
       </Helmet>
       <Box sx={{ backgroundColor: '#EEECEC', minHeight: '100vh' }}>
-      <AppBar className="navbar" color="default" sx={{height: 120, justifyContent: 'center'}}>
+      <AppBar className="navbar" color="default" sx={{height: 115, justifyContent: 'center'}}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between'}}>
         <Button onClick={scrollToHome}>
         <img
@@ -80,7 +90,7 @@ export default function LandingPage() {
         <Button onClick={scrollToAbout} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
                 About
         </Button>
-        <Button variant="outlined" color='black' sx={{ fontSize: 17, fontWeight: 500, textTransform: 'none' }}>
+        <Button variant="outlined" onClick={() => handleOpenModal('login')} color='black' sx={{ fontSize: 17, fontWeight: 500, textTransform: 'none' }}>
                 Login
         </Button>
         </Box>
@@ -98,8 +108,8 @@ export default function LandingPage() {
         <Typography variant="body1" gutterBottom maxWidth={760} fontSize={30}>
         Swipe, Match, and Collaborate with your schoolmates who share your interest and compliment your skills. Build amazing projects together!
         </Typography>
-        <Button variant="contained" sx={{ my: 2, textTransform: 'none', fontSize: 18, paddingInline: 3, backgroundColor: '#4CAF50'}}>
-        <span style={{ color: '#FFFFFF' }}>Sign Up</span>
+        <Button variant="contained" onClick={()=> handleOpenModal('signup')} sx={{ my: 2, textTransform: 'none', fontSize: 18, paddingInline: 3, backgroundColor: '#4CAF50'}}>
+          <span style={{ color: '#FFFFFF' }}>Sign Up</span>
         </Button>
         </Grid>
         <Grid size="grow">
@@ -243,6 +253,17 @@ export default function LandingPage() {
         <Typography variant="body2">©2025 Capstone Connect. All rights reserved.</Typography>
         </Box>
       </Box>
+
+      <SignUpModal
+          open={modalType === 'signup'}
+          handleClose={handleCloseModal}
+      />
+
+      <LogInModal
+          open={modalType === 'login'}
+          handleClose={handleCloseModal}
+          // handleMicrosoftLogin={handleMicrosoftLogin}
+      />
     </>
   );
 }
