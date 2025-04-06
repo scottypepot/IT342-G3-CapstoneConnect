@@ -1,65 +1,34 @@
 package edu.cit.capstoneconnectController;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import edu.cit.capstoneconnectEntity.UserEntity;
+import edu.cit.capstoneconnectService.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-//import edu.cit.capstoneconnectEntity.UserEntity;
-//import edu.cit.capstoneconnectService.UserService;
-
+import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("api/users")
 public class UserController {
+	private final UserService userService;
 
-//	 @Autowired
-//	 private UserService userService;
-	 
-//	 @PostMapping
-//	    public ResponseEntity<Object> createUser(@RequestBody UserEntity user) {
-//	        if (userService.emailExists(user.getEmail())) {
-//	            return ResponseEntity.status(HttpStatus.CONFLICT)
-//	                    .body(Collections.singletonMap("message", "Email already exists"));
-//	        }
-//
-//	        UserEntity savedUser = userService.createUser(user);
-//
-//	        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-//	    }
-	 
-//	@GetMapping("/{id}")
-	 
-//	public ResponseEntity<Object> getUserById(@PathVariable Integer Id){
-//		Optional<UserEntity> user = userService.getUserById(Id);
-//		
-//		if(user.isPresent()) {
-//			return ResponseEntity.ok(user.get());
-//		}else {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
-//		}
-//	}
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-	 
-	// GET Mapping example
-	    @GetMapping("/hello")
-	    public String sayHello() {
-	        return "Hello, CapstoneConnect!";
-	    }
+	@GetMapping("/api/auth/user")
+	public ResponseEntity<?> getUser(@AuthenticationPrincipal OAuth2User oauth2User) {
+		if (oauth2User != null) {
+			String oauthId = oauth2User.getAttribute("oid");
+			String email = oauth2User.getAttribute("email");
+			String name = oauth2User.getAttribute("name");
 
-	    // POST Mapping example
-	    @PostMapping("/message")
-	    public String receiveMessage(@RequestBody String message) {
-	        return "Received message: " + message;
-	    }
-	
+			// Ensure user credentials are saved
+			UserEntity savedUser = userService.saveUserIfNotExists(oauthId, email, name);
+			boolean isFirstTimeUser = userService.isFirstTimeUser(email);
+
+			return ResponseEntity.ok("{\"email\": \"" + email + "\", \"name\": \"" + name + "\", \"firstTimeUser\": " + isFirstTimeUser + "}");
+		}
+		return ResponseEntity.status(401).body("{\"error\": \"User not authenticated\"}");
+	}
 }
