@@ -46,6 +46,11 @@ const steps = [
       description: 'Fill out your information below',
     },
     {
+      title: 'Welcome to CapstoneConnect!',
+      subtitle: 'Update your Profile',
+      description: 'Fill out your information below',
+    },
+    {
       title: 'Congrats! You’ve completed the first step!',
       subtitle: '',
       description: 'You can now connect with other students!',
@@ -619,6 +624,176 @@ export default function WelcomeModal({ open, onClose }) {
 
               </Box>
             );
+            case 5:
+  return (
+    <Box
+      sx={{
+        mt: 8,
+        ml: 15,
+        mr: 15,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Subtitle just like case 2 */}
+      <Typography
+        variant="h3"
+        sx={{
+          color: 'white',
+          fontWeight: 600,
+          textAlign: 'left',
+          mb: 6,
+          fontSize: '2.5rem',
+          width: '100%',
+        }}
+      >
+        {steps[step].subtitle}
+      </Typography>
+
+      {/* Profile box centered */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <Box
+          sx={{
+            width: 280,
+            height: 380,
+            overflowY: 'auto',
+            borderRadius: 5,
+            boxShadow: 4,
+            bgcolor: '#fff',
+            color: 'black',
+            textAlign: 'left',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
+          }}
+        >
+          {/* Profile Image and Basic Info */}
+          <Box
+            sx={{
+              width: 280,
+              height: 380,
+              m: 'auto',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={avatar}
+              alt="Profile"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                background: 'rgba(0, 0, 0, 0.5)',
+                color: 'white',
+                px: 2,
+                py: 1,
+                borderBottomLeftRadius: 20,
+                borderBottomRightRadius: 20,
+              }}
+            >
+              <Typography variant="h6" fontWeight="bold">
+                {formData.fullName || 'No Name'}
+              </Typography>
+              <Typography variant="subtitle2">
+                {formData.role || 'No Preferred Role'}
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Additional Info */}
+          <Box sx={{ px: 3, pt: 2, pb: 4 }}>
+            <Typography variant="h6" fontWeight="bold">About Me</Typography>
+            <Box mt={1} mb={2}>
+              {formData.about || 'No information provided.'}
+            </Box>
+
+            <Typography variant="h6" fontWeight="bold">Skills</Typography>
+            <Box mt={1} mb={2} display="flex" flexWrap="wrap" gap={1}>
+              {skills.length > 0 ? (
+                skills.map(skill => (
+                  <Box
+                    key={skill}
+                    sx={{
+                      px: 2,
+                      py: 0.5,
+                      borderRadius: 3,
+                      backgroundColor: '#FFD700',
+                      color: 'black',
+                      fontWeight: 500,
+                      fontSize: '0.85rem',
+                    }}
+                  >
+                    {skill}
+                  </Box>
+                ))
+              ) : (
+                'No skills selected.'
+              )}
+            </Box>
+
+            <Typography variant="h6" fontWeight="bold">Interests</Typography>
+              <Box
+                mt={1}
+                mb={2}
+                display="flex"
+                flexWrap="wrap"
+                gap={1}
+                >
+              {interests.length > 0 ? (
+                  interests.map((interest, index) => (
+                <Box
+                    key={interest + index}
+                    sx={{
+                    width: '48%', // slightly less than 50% to account for gap
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: 3,
+                    backgroundColor: '#00C1A0',
+                    color: 'black',
+                    fontWeight: 500,
+                    fontSize: '0.85rem',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                {interest}
+              </Box>
+              ))
+              ) : (
+                'No interests selected.'
+              )}
+            </Box>
+            
+            <Typography variant="h6" fontWeight="bold">GitHub</Typography>
+            <Box mt={1}>
+              {formData.githublink ? (
+                <a
+                  href={formData.githublink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#0077cc' }}
+                >
+                  {formData.githublink}
+                </a>
+              ) : (
+                'No GitHub link provided.'
+              )}
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+            
         }
     }
 
@@ -638,22 +813,24 @@ export default function WelcomeModal({ open, onClose }) {
       }}
       disableEscapeKeyDown={step !== steps.length - 1}
     >
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        width: 1200,
-        height: 800,
-        mt: 2,
-        bgcolor: '#00645C',
-        borderRadius: 3,
-        boxShadow: 24,
-        p: 4,
-        textAlign: 'center',
-      }}>
+      <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90vw',
+            height: '90vh',
+            maxWidth: 1200,
+            maxHeight: 800,
+            bgcolor: '#00645C',
+            borderRadius: 3,
+            boxShadow: 24,
+            p: 4,
+            textAlign: 'center',
+            overflow: 'auto',
+          }}
+        >
 
         <Typography variant="h2" fontWeight="bold" color='white' fontSize={65} mt={5}>
           {steps[step].title}
