@@ -2,10 +2,11 @@ import React from 'react';
 import { AppBar, Toolbar, Button, Typography, Container, Box, Grid, Card, CardContent, Avatar } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import Logo from '../assets/logo.png';
-
+import { useNavigate } from 'react-router-dom';
 
 
 export default function MessagesPage() {
+    const navigate = useNavigate();
   return (
     <>
       <Helmet>
@@ -23,13 +24,13 @@ export default function MessagesPage() {
               />
             </Button>
             <Box sx={{ display: 'flex', gap: 5.5, marginRight: 20 }}>
-              <Button color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
+              <Button onClick={() => navigate('/home')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
                 Find
               </Button>
-              <Button color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
+              <Button onClick={()=> navigate('/messages')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
                 Messages
               </Button>
-              <Button color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
+              <Button onClick={() => navigate('/profile')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
                 Profile
               </Button>
             </Box>

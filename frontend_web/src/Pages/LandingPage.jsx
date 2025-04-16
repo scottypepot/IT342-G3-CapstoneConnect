@@ -118,36 +118,82 @@ export default function LandingPage() {
         </Toolbar>
       </AppBar>
 
-      <Box sx={{flexGrow:1, textAlign: 'left', px: 6, maxWidth: 1280}}>
-      <Container sx={{ py: 6, marginTop: 20}}>
-        <Grid container alignItems="center" spacing={3} maxWidth="false" sx={{ width: '100%', px: 0 }}>
-            <Grid size="auto">
-        <Typography variant="h2" fontWeight="bold"fontSize={90} marginTop={11}>
-        <span style={{ color: '#003366' }}>Find your perfect</span> <br />
-        <span style={{ color: '#4CAF50' }}>Capstone Team</span>
+      <Box sx={{ width: '100%', mt: 18}}>
+  <Container maxWidth="xl" sx={{ py: { xs: 3, md: 6 } }}>
+    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' },gap: 4, alignItems: 'center', mt: { xs: 4, md: 10 } }}>
+      {/* Text Column */}
+      <Box sx={{ flex: 1, pr: { md: 4 }, textAlign: 'left', width: '100%'}}>
+        <Typography 
+          variant="h1" 
+          sx={{ 
+            color: '#003366', 
+            fontWeight: 'bold',
+            fontSize: 90,
+            lineHeight: 1.1
+          }}
+        >
+          Find your perfect
         </Typography>
-        <Typography variant="body1" gutterBottom maxWidth={760} fontSize={30}>
-        Swipe, Match, and Collaborate with your schoolmates who share your interest and compliment your skills. Build amazing projects together!
+        <Typography 
+          variant="h1" 
+          sx={{ 
+            color: '#4CAF50', 
+            fontWeight: 'bold',
+            fontSize: 90,
+            lineHeight: 1.1,
+            mb: 2
+          }}
+        >
+          Capstone Team
         </Typography>
-        <Button variant="contained" onClick={()=> handleOpenModal('signup')} sx={{ my: 2, textTransform: 'none', fontSize: 18, paddingInline: 3, backgroundColor: '#4CAF50'}}>
-          <span style={{ color: '#FFFFFF' }}>Sign Up</span>
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            fontSize: { xs: '1rem', md: '1.25rem' },
+            mb: 3,
+            maxWidth: '90%'
+          }}
+        >
+          Swipe, Match, and Collaborate with your schoolmates who share your interest and compliment your skills. Build amazing projects together!
+        </Typography>
+        <Button 
+          variant="contained" 
+          sx={{ 
+            bgcolor: '#4CAF50', 
+            color: '#FFFFFF',
+            textTransform: 'none',
+            px: 4,
+            py: 1,
+            fontSize: '1rem'
+          }}
+          onClick={() => handleOpenModal('signup')}
+        >
+          Sign Up
         </Button>
-        </Grid>
-        <Grid size="grow">
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginLeft: 90}}>
-          <img
-            src={groupImage}
-            alt="team"
-            style={{width: 'auto',
-              height: '450px',
-              maxWidth: 'none',
-              objectFit: 'contain'}}
-          />
-        </Box>
-      </Grid>
-      </Grid>
-      </Container>
       </Box>
+      
+      {/* Image Column */}
+      <Box 
+        sx={{ 
+          flex: 1, 
+          display: 'flex', 
+          justifyContent: 'flex-end',
+          width: '100%',
+          mt: { xs: 4, md: 0 },
+        }}
+      >
+        <img
+          src={groupImage}
+          alt="team"
+          style={{
+            maxWidth: '100%',
+            height: '400px'
+          }}
+        />
+      </Box>
+    </Box>
+  </Container>
+</Box>
 
       <Container id="how-it-works" sx={{ py: 6, marginTop: 20, scrollMarginTop: 130 }}>
         <Typography variant="h5" fontWeight="600" gutterBottom>

@@ -7,7 +7,10 @@ import App from './App.jsx'
 import LandingPage from './Pages/LandingPage.jsx';
 import HomePage from './Pages/HomePage.jsx';
 import MessagesPage from './Pages/MessagesPage.jsx';
+import ProfilePage from './Pages/ProfilePage.jsx';
+import EditProfilePage from './Pages/EditProfilePage.jsx';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+
 
 const theme = createTheme({
   palette: {
@@ -28,6 +31,8 @@ createRoot(document.getElementById('root')).render(
             <Route path="/" element={<LandingPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/edit-profile" element={<EditProfilePage/>} />
           </Routes>
       </Router>
     </ThemeProvider>

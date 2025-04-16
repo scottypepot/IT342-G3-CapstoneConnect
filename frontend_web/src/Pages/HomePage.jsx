@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   AppBar,
   Toolbar,
   Button,
   Box
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Logo from '../assets/logo.png';
 import WelcomeModal from '../Pages/WelcomeModal'; // ✅ adjust path if needed
 
 export default function HomePage() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(true); // default to true for demo
-
+  const navigate = useNavigate();
   // Optional: only show once on first load
   useEffect(() => {
     const hasShown = sessionStorage.getItem('hasShownWelcome');
@@ -20,6 +21,20 @@ export default function HomePage() {
       sessionStorage.setItem('hasShownWelcome', 'true');
     }
   }, []);
+
+  // useEffect(() => {
+  //   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // check if user is logged in
+  //   const isNewUser = localStorage.getItem('isNewUser') === 'true'; // optional flag for new user
+  //   const hasShown = sessionStorage.getItem('hasShownWelcome');
+  
+  //   // Show modal only if user is logged in, is a new user, and hasn't seen it yet
+  //   if (isLoggedIn && isNewUser && !hasShown) {
+  //     setShowWelcomeModal(true);
+  //     sessionStorage.setItem('hasShownWelcome', 'true');
+  //   } else {
+  //     setShowWelcomeModal(false);
+  //   }
+  // }, []);
 
   return (
     <>
@@ -39,20 +54,20 @@ export default function HomePage() {
               />
             </Button>
             <Box sx={{ display: 'flex', gap: 5.5, marginRight: 20 }}>
-              <Button color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
+              <Button onClick={() => navigate('/home')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
                 Find
               </Button>
-              <Button color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
+              <Button onClick={()=> navigate('/messages')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
                 Messages
               </Button>
-              <Button color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
+              <Button onClick={() => navigate('/profile')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
                 Profile
               </Button>
             </Box>
           </Toolbar>
         </AppBar>
 
-        {/* ✅ Welcome Modal */}
+        ✅ Welcome Modal
         <WelcomeModal
           open={showWelcomeModal}
           onClose={() => setShowWelcomeModal(false)}
