@@ -17,29 +17,30 @@ public class UserService {
     }
 
     @Transactional
-    public UserEntity saveUserIfNotExists(String oauthId, String email, String name) {
-        Optional<UserEntity> existingUser = userRepository.findByOauthId(oauthId);
+    public boolean saveUserIfNotExists(String oauthId, String email, String name) {
+        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
+        System.out.println("🔍 Checking database before saving - Exists? " + existingUser.isPresent());
+
         if (existingUser.isPresent()) {
-            return existingUser.get();
+            System.out.println("✅ User already exists: " + email);
+            return false; // Not a first-time user
         }
 
-        if (email != null && !email.isEmpty()) {
-            existingUser = userRepository.findByEmail(email);
-            if (existingUser.isPresent()) {
-                UserEntity user = existingUser.get();
-                if (user.getOauthId() == null) {
-                    user.setOauthId(oauthId);
-                    userRepository.saveAndFlush(user);
-                }
-                return user;
-            }
-        }
+        System.out.println("🚀 Creating new user in database: " + email);
+        UserEntity newUser = new UserEntity(oauthId, email, name);
+        userRepository.saveAndFlush(newUser);
 
-        return userRepository.saveAndFlush(new UserEntity(oauthId, email, name));
+        System.out.println("✅ User saved successfully: " + email);
+        return true; // First-time user
     }
+
 
     public boolean isFirstTimeUser(String email) {
         Optional<UserEntity> existingUser = userRepository.findByEmail(email);
-        return existingUser.isEmpty(); // If no user exists, return true
+
+        boolean isFirstTime = existingUser.isEmpty();
+        System.out.println("🚀 First-time user check for " + email + " → " + isFirstTime);
+
+        return isFirstTime;
     }
 }
