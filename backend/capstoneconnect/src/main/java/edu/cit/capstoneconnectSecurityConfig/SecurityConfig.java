@@ -34,19 +34,19 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler oAuthSuccessHandler() {
-        return ((request, response, authentication) -> {
+        return (request, response, authentication) -> {
             OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
             String email = oauth2User.getAttribute("email");
 
-            boolean isFirstTimeUser = userService.isFirstTimeUser(email);
+            System.out.println("✅ OAuth Login Successful - Processing User Data");
 
-            System.out.println("✅ OAuth Login Successful - Redirecting User");
+            boolean isFirstTimeUser = userService.saveUserIfNotExists(oauth2User.getAttribute("oid"), email, oauth2User.getAttribute("name"));
 
             if (isFirstTimeUser) {
-                response.sendRedirect("/setup-profile"); // ✅ Redirect for new users
+                response.sendRedirect("http://localhost:5173/home");
             } else {
-                response.sendRedirect("/home"); // ✅ Redirect for returning users
+                response.sendRedirect("http://localhost:5173/home");
             }
-        });
+        };
     }
 }
