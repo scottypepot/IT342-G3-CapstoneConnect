@@ -19,17 +19,17 @@ const developers = [
   {
     name: 'Jhovynn Aldrich Apurado',
     role: 'Mobile Developer',
-    image: 'https://via.placeholder.com/100',
+    image: '/apurado.jpg',
   },
   {
     name: 'Scott Benzer Gitgano',
     role: 'Frontend Developer',
-    image: 'https://via.placeholder.com/100',
+    image: '/gitgano.jpg',
   },
   {
     name: 'John Gerard Donaire',
     role: 'Backend Developer',
-    image: 'https://via.placeholder.com/100',
+    image: '/donaire.jpg',
   },
 ];
 
@@ -103,12 +103,17 @@ export default function LandingPage() {
       {/* Text Column */}
       <Box sx={{ flex: 1, pr: { md: 4 }, textAlign: 'left', width: '100%'}}>
         <Typography 
-          variant="h1" 
           sx={{ 
             color: '#003366', 
             fontWeight: 'bold',
-            fontSize: 90,
-            lineHeight: 1.1
+            fontSize: {
+              xs: 40,  // extra-small screens
+              sm: 60,  // small screens
+              md: 80,  // medium screens
+              lg: 90   // large screens and up
+            },
+            lineHeight: 1.1,
+            whiteSpace: 'nowrap'
           }}
         >
           Find your perfect
@@ -118,7 +123,12 @@ export default function LandingPage() {
           sx={{ 
             color: '#4CAF50', 
             fontWeight: 'bold',
-            fontSize: 90,
+            fontSize: {
+              xs: 40,  // extra-small screens
+              sm: 60,  // small screens
+              md: 80,  // medium screens
+              lg: 90   // large screens and up
+            },
             lineHeight: 1.1,
             mb: 2
           }}

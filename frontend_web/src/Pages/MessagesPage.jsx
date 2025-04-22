@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Button, Typography, Container, Box, Grid, Card, CardCo
 import { Helmet } from 'react-helmet';
 import Logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
-
+import Navbar from '../Pages/NavBar';
 
 export default function MessagesPage() {
     const navigate = useNavigate();
@@ -14,28 +14,8 @@ export default function MessagesPage() {
         <meta name="description" content="Swipe, match and collaborate with classmates" />
       </Helmet>
       <Box sx={{ backgroundColor: '#EEECEC', minHeight: '100vh', overflow: 'hidden'}}>
-        <AppBar className="navbar" color="default" sx={{ height: 100, justifyContent: 'center' }}>
-          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button>
-              <img
-                src={Logo}
-                alt="CapstoneConnect Logo"
-                style={{ maxWidth: '250px' }}
-              />
-            </Button>
-            <Box sx={{ display: 'flex', gap: 5.5, marginRight: 20 }}>
-              <Button onClick={() => navigate('/home')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Find
-              </Button>
-              <Button onClick={()=> navigate('/messages')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Messages
-              </Button>
-              <Button onClick={() => navigate('/profile')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Profile
-              </Button>
-            </Box>
-          </Toolbar>
-        </AppBar>
+      <Navbar />
+      <Toolbar />
 
         <Typography variant="h4" fontWeight="bold" color="#4CAF50" sx={{ mt:25, pl:40,textAlign: 'left'}}>
           Messages

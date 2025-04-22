@@ -14,6 +14,8 @@ out/
 .turbo
 debug.log
 
+# Read Me File
+README.md
 # Compiled class file
 *.class
 
