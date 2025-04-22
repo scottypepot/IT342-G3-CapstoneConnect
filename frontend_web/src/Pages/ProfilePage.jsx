@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Button, Typography, Box } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import Logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../Pages/NavBar';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -48,29 +49,8 @@ export default function ProfilePage() {
         <meta name="description" content="Manage your CapstoneConnect profile" />
       </Helmet>
       <Box sx={{ backgroundColor: '#EEECEC', minHeight: '100vh', overflow: 'hidden'}}>
-        <AppBar className="navbar" color="default" sx={{ height: 100, justifyContent: 'center' }}>
-          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button>
-              <img
-                src={Logo}
-                alt="CapstoneConnect Logo"
-                style={{ maxWidth: '250px' }}
-              />
-            </Button>
-            <Box sx={{ display: 'flex', gap: 5.5, marginRight: 20 }}>
-              <Button onClick={() => navigate('/home')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Find
-              </Button>
-              <Button onClick={()=> navigate('/messages')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Messages
-              </Button>
-              <Button onClick={() => navigate('/profile')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Profile
-              </Button>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        
+      <Navbar />
+      <Toolbar />
 
         <Box sx={{ 
           display: 'flex', 
