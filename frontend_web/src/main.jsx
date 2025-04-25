@@ -9,6 +9,7 @@ import HomePage from './Pages/HomePage.jsx';
 import MessagesPage from './Pages/MessagesPage.jsx';
 import ProfilePage from './Pages/ProfilePage.jsx';
 import EditProfilePage from './Pages/EditProfilePage.jsx';
+import ChatPage from './Pages/ChatPage';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/edit-profile" element={<EditProfilePage/>} />
+            <Route path="/chat/:userId" element={<ChatPage />} />
           </Routes>
       </Router>
     </ThemeProvider>

@@ -230,8 +230,15 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const handleSwipeLeft = () => setCurrentIndex(prev => prev + 1);
-  const handleSwipeRight = () => setCurrentIndex(prev => prev + 1);
-
+  const handleSwipeRight = () => {
+    const profile = mockProfiles[currentIndex];
+    const existing = JSON.parse(localStorage.getItem('matches')) || [];
+    const updatedMatches = [...existing, profile];
+    localStorage.setItem('matches', JSON.stringify(updatedMatches));
+  
+    setCurrentIndex(prev => prev + 1);
+  };
+  
   return (
     <>
       <Helmet>
