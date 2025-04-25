@@ -1,8 +1,7 @@
 export const getAuthenticatedUser = async () => {
     try {
-        console.log("🚀 Fetching authenticated user...");
         const response = await fetch("http://localhost:8080/api/auth/user", {
-            credentials: "include",
+            credentials: "include", // Include cookies for session-based authentication
         });
 
         if (!response.ok) {
@@ -10,22 +9,20 @@ export const getAuthenticatedUser = async () => {
         }
 
         const data = await response.json();
-        console.log("✅ Authentication response received:", data);
+        console.log("✅ Backend response:", data);
 
-        // 🚀 Redirect user AFTER authentication completes
-        setTimeout(() => {
-            if (data.firstTimeUser) {
-                console.log("🚀 First-time user detected! Redirecting to /home...");
-                window.location.href = "http://localhost:5173/home";
-            } else {
-                console.log("✅ Existing user detected! Redirecting to /home...");
-                window.location.href = "http://localhost:5173/home";
-            }
-        }, 500); // Small delay ensures transaction completion before redirect
+        // Store user data in sessionStorage
+        sessionStorage.setItem("isAuthenticated", "true");
+        sessionStorage.setItem("userId", data.id); // Store the user ID
+        sessionStorage.setItem("user", JSON.stringify(data));
 
+        console.log("✅ User ID stored in sessionStorage:", data.id);
         return data;
     } catch (error) {
         console.error("❌ Authentication error:", error);
+        sessionStorage.removeItem("isAuthenticated");
+        sessionStorage.removeItem("userId");
+        sessionStorage.removeItem("user");
         return null;
     }
 };

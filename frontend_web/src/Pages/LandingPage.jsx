@@ -63,18 +63,14 @@ export default function LandingPage() {
 
   useEffect(() => {
     const checkAuthentication = async () => {
-        try {
-            const user = await getAuthenticatedUser(); // Fetch user session
+        const user = await getAuthenticatedUser();
 
-            if (user) {
-                if (user.firstTimeUser) {
-                    window.location.href = "/setup-profile"; // ✅ Redirect new users
-                } else {
-                    window.location.href = "/home"; // ✅ Redirect returning users
-                }
+        if (user) {
+            if (user.firstTimeUser) {
+                window.location.href = "/home";
+            } else {
+                window.location.href = "/profile";
             }
-        } catch (error) {
-            console.error("Authentication check failed:", error);
         }
     };
 
