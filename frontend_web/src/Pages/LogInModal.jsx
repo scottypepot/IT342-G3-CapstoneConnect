@@ -8,10 +8,9 @@ import CloseB from '../assets/closeicon.png';
 
 export default function LoginModal({ open, handleClose}) {
 
-  // const handleMicrosoftLogIn = () => {
-  //   // to redirect in the backend oauth endpoint for microsoft sign in
-  //   window.location.href = "http://localhost:8000/api/auth/microsoft"; // <-- Update with actual backend URL
-  // };
+  const handleMicrosoftLogin = () => {
+    window.location.href = "http://localhost:8080/api/auth/microsoft";
+};
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -44,7 +43,7 @@ export default function LoginModal({ open, handleClose}) {
         <Button
           variant="contained"
           fullWidth
-        //   onClick={handleMicrosoftLogin}
+           onClick={handleMicrosoftLogin}
           startIcon={
             <img src={MLogo} alt="Microsoft logo" style={{ width: 24, height: 24 }} />
           }

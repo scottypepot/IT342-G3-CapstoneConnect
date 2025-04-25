@@ -12,8 +12,14 @@ import Acad from '../assets/acad.png';
 import { Helmet } from 'react-helmet';
 import SignUpModal from './SignUpModal';
 import LogInModal from './LogInModal';
+
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+=======
+import { useEffect } from "react";
+import { getAuthenticatedUser } from "./authService"; 
+
+
 
 const developers = [
   {
@@ -60,6 +66,26 @@ const scrollToHome = () => {
 
 export default function LandingPage() {
   const [modalType, setModalType] = useState(null);
+
+  useEffect(() => {
+    const checkAuthentication = async () => {
+        try {
+            const user = await getAuthenticatedUser(); // Fetch user session
+
+            if (user) {
+                if (user.firstTimeUser) {
+                    window.location.href = "/setup-profile"; // ✅ Redirect new users
+                } else {
+                    window.location.href = "/home"; // ✅ Redirect returning users
+                }
+            }
+        } catch (error) {
+            console.error("Authentication check failed:", error);
+        }
+    };
+
+    checkAuthentication();
+}, []);
 
   const handleOpenModal = (type) => setModalType(type);
   const handleCloseModal = () => setModalType(null);
