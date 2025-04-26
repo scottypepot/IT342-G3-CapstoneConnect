@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Navbar from './NavBar';
 import {
   Box,
   Typography,
@@ -10,7 +11,9 @@ import {
   InputAdornment,
   AppBar,
   Toolbar,
-  Modal
+  Modal,
+  Menu,
+  MenuItem  
 } from '@mui/material';
 import { ArrowBack, Edit, Add, ExpandMore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +27,11 @@ export default function EditProfilePage() {
     fullName: '',
     role: '',
     about: '',
+    github: '',
+  });
+
+  const [errors, setErrors] = useState({
+    fullName: '',
     github: '',
   });
 
@@ -57,6 +65,16 @@ export default function EditProfilePage() {
     'Cybersecurity',
     'UI/UX Design'
   ];
+  const [anchorEl, setAnchorEl] = useState(null); // anchor for dropdown
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const isOpen = Boolean(anchorEl);
 
   // Fetch user data when component mounts
   useEffect(() => {
@@ -94,7 +112,45 @@ export default function EditProfilePage() {
     fetchUserData();
   }, []);
 
+  // Validation functions
+  const validateName = (name) => {
+    const nameRegex = /^[a-zA-Z\s]*$/;
+    return nameRegex.test(name);
+  };
+
+  const validateGithubLink = (link) => {
+    if (!link) return true; // Allow empty github link
+    const githubRegex = /^https:\/\/github\.com\/[a-zA-Z0-9-]+\/?$/;
+    return githubRegex.test(link);
+  };
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Validate fields
+    if (field === 'fullName') {
+      if (!validateName(value)) {
+        setErrors(prev => ({ ...prev, fullName: 'Name can only contain letters and spaces' }));
+      } else {
+        setErrors(prev => ({ ...prev, fullName: '' }));
+      }
+    }
+    
+    if (field === 'github') {
+      if (!validateGithubLink(value)) {
+        setErrors(prev => ({ ...prev, github: 'Please enter a valid GitHub profile URL (e.g., https://github.com/username)' }));
+      } else {
+        setErrors(prev => ({ ...prev, github: '' }));
+      }
+    }
+  };
+
   const handleSave = async () => {
+    // Validate before saving
+    if (!validateName(formData.fullName) || !validateGithubLink(formData.github)) {
+      return;
+    }
+
     try {
       const userId = sessionStorage.getItem("userId");
       if (!userId) {
@@ -156,10 +212,6 @@ export default function EditProfilePage() {
     }
   };
 
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
   const handleSkillSelect = (skill) => {
     if (!skills.includes(skill)) {
       setSkills([...skills, skill]);
@@ -170,6 +222,10 @@ export default function EditProfilePage() {
 
   const handleInterestSelect = (interest) => {
     if (!interests.includes(interest)) {
+      if (interests.length >= 4) {
+        // Don't add more than 4 interests
+        return;
+      }
       setInterests([...interests, interest]);
     } else {
       setInterests(interests.filter((i) => i !== interest));
@@ -178,29 +234,7 @@ export default function EditProfilePage() {
 
   return (
     <Box sx={{ p: 5, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-        <AppBar className="navbar" color="default" sx={{ height: 100, justifyContent: 'center' }}>
-          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button>
-              <img
-                src={Logo}
-                alt="CapstoneConnect Logo"
-                style={{ maxWidth: '250px' }}
-              />
-            </Button>
-            <Box sx={{ display: 'flex', gap: 5.5, marginRight: 20 }}>
-              <Button onClick={() => navigate('/home')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Find
-              </Button>
-              <Button onClick={()=> navigate('/messages')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Messages
-              </Button>
-              <Button onClick={() => navigate('/profile')} color="inherit" sx={{ fontSize: 20, fontWeight: 500, textTransform: 'none' }}>
-                Profile
-              </Button>
-            </Box>
-          </Toolbar>
-        </AppBar>
-
+      <Navbar />
       {/* Profile Picture and Info */}
       <Box display="flex" flexDirection="column" alignItems="center" mt={15}>
         <Box sx={{ position: 'relative' }}>
@@ -237,6 +271,8 @@ export default function EditProfilePage() {
             }}
             sx={{ fontSize: 20, fontWeight: 'bold', mb: 1 }}
             fullWidth
+            error={!!errors.fullName}
+            helperText={errors.fullName}
           />
           <TextField
             value={formData.role}
@@ -287,7 +323,7 @@ export default function EditProfilePage() {
           <IconButton 
             size="small" 
             sx={{ backgroundColor: '#ccc' }}
-            onClick={() => setSkillsModalOpen(true)}
+            onClick={handleOpen}
           >
             <Add fontSize="small" />
           </IconButton>
@@ -297,8 +333,13 @@ export default function EditProfilePage() {
       {/* Interests Section */}
       <Box mt={4}>
         <Typography fontWeight="bold" color="#1a1a1a">
-          Interest:
+          Interests:
         </Typography>
+        {interests.length < 4 && (
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 2, textAlign: 'left', ml: 2, color: 'red' }}>
+            {4 - interests.length} selections remaining
+          </Typography>
+        )}
         <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
           {interests.map(interest => (
             <Chip 
@@ -310,8 +351,12 @@ export default function EditProfilePage() {
           ))}
           <IconButton 
             size="small" 
-            sx={{ backgroundColor: '#ccc' }}
-            onClick={() => setInterestsModalOpen(true)}
+            sx={{ 
+              backgroundColor: '#ccc',
+              opacity: interests.length >= 4 ? 0.5 : 1,
+              cursor: interests.length >= 4 ? 'not-allowed' : 'pointer'
+            }}
+            onClick={() => interests.length < 4 && setInterestsModalOpen(true)}
           >
             <Add fontSize="small" />
           </IconButton>
@@ -327,6 +372,8 @@ export default function EditProfilePage() {
           fullWidth
           value={formData.github}
           onChange={e => handleChange('github', e.target.value)}
+          error={!!errors.github}
+          helperText={errors.github}
           sx={{ mt: 1, backgroundColor: 'white', borderRadius: 1 }}
         />
       </Box>
@@ -349,86 +396,42 @@ export default function EditProfilePage() {
       </Box>
 
       {/* Skills Modal */}
-      <Modal open={skillsModalOpen} onClose={() => setSkillsModalOpen(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 900,
-            height: 600,
-            bgcolor: '#2E2F44',
-            borderRadius: 2,
-            p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Typography variant='subtitle1' sx={{textAlign: 'center',fontSize: 30, color: '#4CAF50', fontWeight: 600, borderBottom: '2px solid white', width: '100%'}}>
-            Skills
-          </Typography>
-          <Box sx={{ textAlign: 'left', width: '100%', ml: 20}}>
-            <Typography variant="subtitle1" sx={{ fontSize: 16, color: 'white' }}>
-              Select your skills
-            </Typography>
-          </Box>
-          <Box
+      <Menu
+        anchorEl={anchorEl}
+        open={isOpen}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        slotProps={{
+          sx: {
+            bgcolor: '#222',
+            color: 'white',
+            mt: 1,
+          },
+        }}
+      >
+        {SKILLS.map((skill) => (
+          <MenuItem
+            key={skill}
+            selected={skills.includes(skill)}
+            onClick={() => handleSkillSelect(skill)}
             sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: 2,
-            }}
-          >
-            {SKILLS.map((skill) => {
-              const isSelected = skills.includes(skill);
-              return (
-                <Box
-                  key={skill}
-                  onClick={() => handleSkillSelect(skill)}
-                  sx={{
-                    width: 300,
-                    height: 45,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 2,
-                    border: '1px solid',
-                    borderColor: isSelected ? '#FFD700' : 'grey.400',
-                    backgroundColor: isSelected ? '#FFD700' : '#577058',
-                    color: isSelected ? 'black' : 'white',
-                    cursor: 'pointer',
-                    fontWeight: 500,
-                    transition: 'all 0.2s ease-in-out',
-                    '&:hover': {
-                      backgroundColor: isSelected ? '#FFD700' : 'rgba(0,0,0,0.05)',
-                    },
-                  }}
-                >
-                  {skill}
-                </Box>
-              );
-            })}
-          </Box>
-
-          <Button 
-            variant="contained" 
-            onClick={() => setSkillsModalOpen(false)}
-            sx={{ 
-              mt: 4,
-              backgroundColor: '#0C4278',
-              color: 'white',
+              backgroundColor: skills.includes(skill) ? '#444' : 'transparent',
               '&:hover': {
-                backgroundColor: '#0C4278',
+                backgroundColor: '#555',
               },
             }}
           >
-            Save Skills
-          </Button>
-        </Box>
-      </Modal>
+            {skill}
+          </MenuItem>
+        ))}
+      </Menu>
 
       {/* Interests Modal */}
       <Modal open={interestsModalOpen} onClose={() => setInterestsModalOpen(false)}>
@@ -478,14 +481,14 @@ export default function EditProfilePage() {
                     justifyContent: 'center',
                     borderRadius: 2,
                     border: '1px solid',
-                    borderColor: isSelected ? '#00C1A0' : 'grey.400',
-                    backgroundColor: isSelected ? '#00C1A0' : '#577058',
-                    color: isSelected ? 'black' : 'white',
+                    borderColor: isSelected ? '#00645C' : 'grey.400',
+                    backgroundColor: isSelected ? '#00645C' : '#577058',
+                    color: 'white',
                     cursor: 'pointer',
                     fontWeight: 500,
                     transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                      backgroundColor: isSelected ? '#00C1A0' : 'rgba(0,0,0,0.05)',
+                      backgroundColor: isSelected ? '#004F47' : 'rgba(0,0,0,0.05)',
                     },
                   }}
                 >
@@ -500,10 +503,10 @@ export default function EditProfilePage() {
             onClick={() => setInterestsModalOpen(false)}
             sx={{ 
               mt: 4,
-              backgroundColor: '#0C4278',
-              color: 'white',
+              backgroundColor: 'white',
+              color: 'black',
               '&:hover': {
-                backgroundColor: '#0C4278',
+                backgroundColor: '#d9d9d9'
               },
             }}
           >
