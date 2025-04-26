@@ -225,9 +225,11 @@ export default function WelcomeModal({ open, onClose }) {
         // Ensure we have a valid profile picture URL
         const profilePictureUrl = uploadedAvatarUrl || "/uploads/default-avatar.png";
 
+        // Update user profile
         const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({
                 fullName: formData.fullName,
                 role: formData.role,
@@ -236,30 +238,28 @@ export default function WelcomeModal({ open, onClose }) {
                 interests,
                 githubLink: formData.githublink,
                 profilePicture: profilePictureUrl,
-                resume,
             }),
-            credentials: "include",
         });
 
         if (response.ok) {
-            console.log("✅ Profile updated successfully");
-            const updatedData = await response.json();
-
-            // Save updated data in sessionStorage
-            sessionStorage.setItem("formData", JSON.stringify(updatedData));
-            sessionStorage.setItem("skills", JSON.stringify(updatedData.skills));
-            sessionStorage.setItem("interests", JSON.stringify(updatedData.interests));
-            sessionStorage.setItem("avatar", updatedData.profilePicture);
-
-            // Redirect to profile page
-            window.location.href = "/home";
+            // Update firstTimeUser status
+            await fetch(`http://localhost:8080/api/users/${userId}/first-time`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    firstTimeUser: false
+                }),
+            });
+            
+            onClose();
         } else {
-            throw new Error("Failed to update profile");
+            console.error("❌ Failed to update profile");
         }
     } catch (error) {
-        console.error("❌ Failed to update profile:", error);
+        console.error("❌ Error updating profile:", error);
     }
-};
+  };
 
 const handleAvatarChange = async (e) => {
   const file = e.target.files[0];

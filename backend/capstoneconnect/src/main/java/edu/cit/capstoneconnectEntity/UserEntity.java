@@ -1,5 +1,6 @@
 package edu.cit.capstoneconnectEntity;
 
+import edu.cit.capstoneconnectMatch.Match;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class UserEntity {
     private List<String> interests = new ArrayList<>();
 
     private String githubLink;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Match> matches = new ArrayList<>();
 
     public UserEntity() {
 
@@ -144,5 +148,13 @@ public class UserEntity {
 
     public void setFirstTimeUser(boolean firstTimeUser) {
         this.firstTimeUser = firstTimeUser;
+    }
+
+    public List<Match> getMatches() {
+        return matches;
+    }
+
+    public void setMatches(List<Match> matches) {
+        this.matches = matches;
     }
 }

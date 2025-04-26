@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -14,28 +14,7 @@ import WelcomeModal from '../Pages/WelcomeModal';
 import ConnectIcon from '../assets/connecticon.png';
 import PassIcon from '../assets/passicon.png';
 import Navbar from '../Pages/NavBar';
-
-// Mock data (replace with real data from backend)
-const mockProfiles = [
-  {
-    fullName: 'Jane Doe',
-    role: 'Frontend Developer',
-    avatar: 'https://via.placeholder.com/400x250',
-    about: 'Passionate about UI/UX design and accessibility.',
-    skills: ['React', 'CSS', 'Figma'],
-    interests: ['Design', 'Frontend', 'Accessibility'],
-    githublink: 'https://github.com/janedoe'
-  },
-  {
-    fullName: 'John Smith',
-    role: 'Backend Developer',
-    avatar: 'https://via.placeholder.com/400x250',
-    about: 'Loves working with APIs and databases.',
-    skills: ['Node.js', 'Express', 'MongoDB'],
-    interests: ['Databases', 'REST APIs', 'Security'],
-    githublink: 'https://github.com/johnsmith'
-  }
-];
+import { getAuthenticatedUser } from "./authService";
 
 const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
   const cardRef = useRef(null);
@@ -65,7 +44,6 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
   };
 
   return (
-    
     <Box
       ref={cardRef}
       sx={{
@@ -95,9 +73,9 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
           color: 'black',
           textAlign: 'left',
           scrollbarWidth: 'none',
-                    '&::-webkit-scrollbar': {
-                      display: 'none',
-                    },
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         }}
       >
         <Box
@@ -109,7 +87,7 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
           }}
         >
           <img
-            src={profile.avatar}
+            src={profile.profilePicture}
             alt="Profile"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
@@ -140,7 +118,7 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
 
           <Typography variant="h6" fontWeight="bold">Skills</Typography>
           <Box mt={1} mb={2} display="flex" flexWrap="wrap" gap={1}>
-            {profile.skills.length ? (
+            {profile.skills && profile.skills.length ? (
               profile.skills.map(skill => (
                 <Box key={skill} sx={{
                   px: 2,
@@ -157,7 +135,7 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
 
           <Typography variant="h6" fontWeight="bold">Interests</Typography>
           <Box mt={1} mb={2} display="flex" flexWrap="wrap" gap={1}>
-            {profile.interests.length ? (
+            {profile.interests && profile.interests.length ? (
               profile.interests.map((i, idx) => (
                 <Box key={i + idx} sx={{
                   px: 2,
@@ -174,68 +152,132 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
 
           <Typography variant="h6" fontWeight="bold">GitHub</Typography>
           <Box mt={1}>
-            {profile.githublink ? (
-              <a href={profile.githublink} target="_blank" rel="noopener noreferrer" style={{ color: '#0077cc' }}>
-                {profile.githublink}
+            {profile.githubLink ? (
+              <a href={profile.githubLink} target="_blank" rel="noopener noreferrer" style={{ color: '#0077cc' }}>
+                {profile.githubLink}
               </a>
             ) : 'No GitHub link provided.'}
           </Box>
         </Box>
       </Box>
-      <Box display="flex" justifyContent="center" gap={4} mt={3} >
-    <IconButton
-      onClick={onSwipeLeft}
-      sx={{
-        bgcolor: '#c0392b',
-        color: 'white',
-        width: 70,
-        height: 70,
-        '&:hover': {
-          bgcolor: '#B93434',
-        },
-      }}
-    >
-      <img
-      src={PassIcon}
-      alt="Like"
-      style={{ width: '90%', height: '90%' }}
-    />
-    </IconButton>
-    <IconButton
-      onClick={onSwipeRight}
-      sx={{
-        bgcolor: '#4CAF50',
-        color: 'white',
-        width: 70,
-        height: 70,
-        '&:hover': {
-          bgcolor: '#27ae60',
-        },
-      }}
-    >
-      <img
-      src={ConnectIcon}
-      alt="Like"
-      style={{ width: '90%', height: '90%' }}
-    />
-    </IconButton>
-  </Box>
+      <Box display="flex" justifyContent="center" gap={4} mt={3}>
+        <IconButton
+          onClick={onSwipeLeft}
+          sx={{
+            bgcolor: '#c0392b',
+            color: 'white',
+            width: 70,
+            height: 70,
+            '&:hover': {
+              bgcolor: '#B93434',
+            },
+          }}
+        >
+          <img
+            src={PassIcon}
+            alt="Pass"
+            style={{ width: '90%', height: '90%' }}
+          />
+        </IconButton>
+        <IconButton
+          onClick={onSwipeRight}
+          sx={{
+            bgcolor: '#4CAF50',
+            color: 'white',
+            width: 70,
+            height: 70,
+            '&:hover': {
+              bgcolor: '#27ae60',
+            },
+          }}
+        >
+          <img
+            src={ConnectIcon}
+            alt="Connect"
+            style={{ width: '90%', height: '90%' }}
+          />
+        </IconButton>
+      </Box>
     </Box>
   );
 };
 
 export default function HomePage() {
-  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [profiles, setProfiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const handleSwipeLeft = () => setCurrentIndex(prev => prev + 1);
-  const handleSwipeRight = () => {
-    const profile = mockProfiles[currentIndex];
-    const existing = JSON.parse(localStorage.getItem('matches')) || [];
-    const updatedMatches = [...existing, profile];
-    localStorage.setItem('matches', JSON.stringify(updatedMatches));
-  
+  useEffect(() => {
+    const checkFirstTimeUser = async () => {
+      try {
+        const user = await getAuthenticatedUser();
+        if (user && user.firstTimeUser) {
+          setShowWelcomeModal(true);
+        }
+      } catch (error) {
+        console.error("Error checking first time user:", error);
+      }
+    };
+
+    const fetchPotentialMatches = async () => {
+      try {
+        const userId = sessionStorage.getItem("userId");
+        if (!userId) {
+          console.error("User ID not found");
+          return;
+        }
+
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/potential-matches`, {
+          credentials: "include"
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setProfiles(data);
+        } else {
+          console.error("Failed to fetch potential matches");
+        }
+      } catch (error) {
+        console.error("Error fetching potential matches:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkFirstTimeUser();
+    fetchPotentialMatches();
+  }, []);
+
+  const handleSwipeLeft = () => {
+    setCurrentIndex(prev => prev + 1);
+  };
+
+  const handleSwipeRight = async () => {
+    const profile = profiles[currentIndex];
+    try {
+      const userId = sessionStorage.getItem("userId");
+      const response = await fetch(`http://localhost:8080/api/users/${userId}/matches`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          matchedUserId: profile.id
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        // Show success message or notification
+        console.log("Match request sent:", result.message);
+      } else {
+        console.error("Failed to save match");
+      }
+    } catch (error) {
+      console.error("Error saving match:", error);
+    }
+
     setCurrentIndex(prev => prev + 1);
   };
   
@@ -247,8 +289,8 @@ export default function HomePage() {
       </Helmet>
 
       <Box sx={{ backgroundColor: '#EEECEC', minHeight: '100vh', overflow: 'hidden' }}>
-      <Navbar />
-      <Toolbar />
+        <Navbar />
+        <Toolbar />
 
         <WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
 
@@ -257,7 +299,7 @@ export default function HomePage() {
             display: 'flex',
             justifyContent: 'flex-start',
             mt: { xs: 15, sm: 20, md: 13 },
-            ml: {  xs: 2, sm: 6, md: 40 },
+            ml: { xs: 2, sm: 6, md: 40 },
           }}
         >
           <Typography variant="h4" fontWeight="bold">
@@ -277,9 +319,13 @@ export default function HomePage() {
             alignItems: 'center',
           }}
         >
-          {currentIndex < mockProfiles.length ? (
+          {isLoading ? (
+            <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#5E6062' }}>
+              Loading profiles...
+            </Typography>
+          ) : currentIndex < profiles.length ? (
             <SwipeCard
-              profile={mockProfiles[currentIndex]}
+              profile={profiles[currentIndex]}
               onSwipeLeft={handleSwipeLeft}
               onSwipeRight={handleSwipeRight}
             />
