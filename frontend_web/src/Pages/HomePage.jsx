@@ -47,8 +47,8 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
     <Box
       ref={cardRef}
       sx={{
-        width: 400,
-        height: 500,
+        width: 350,
+        height: 450,
         position: 'absolute',
         top: 0,
         left: '50%',
@@ -80,8 +80,8 @@ const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
       >
         <Box
           sx={{
-            width: 400,
-            height: 500,
+            width: 350,
+            height: 450,
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -210,26 +210,23 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkFirstTimeUser = async () => {
+    const initializeHomePage = async () => {
       try {
+        // First, get the authenticated user
         const user = await getAuthenticatedUser();
-        if (user && user.firstTimeUser) {
-          setShowWelcomeModal(true);
-        }
-      } catch (error) {
-        console.error("Error checking first time user:", error);
-      }
-    };
-
-    const fetchPotentialMatches = async () => {
-      try {
-        const userId = sessionStorage.getItem("userId");
-        if (!userId) {
-          console.error("User ID not found");
+        if (!user) {
+          console.error("No authenticated user found");
+          navigate('/'); // Redirect to landing page if no user
           return;
         }
 
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/potential-matches`, {
+        // Check if first time user
+        if (user.firstTimeUser) {
+          setShowWelcomeModal(true);
+        }
+
+        // Then fetch potential matches using the user ID
+        const response = await fetch(`http://localhost:8080/api/users/${user.id}/potential-matches`, {
           credentials: "include"
         });
 
@@ -240,15 +237,14 @@ export default function HomePage() {
           console.error("Failed to fetch potential matches");
         }
       } catch (error) {
-        console.error("Error fetching potential matches:", error);
+        console.error("Error initializing home page:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    checkFirstTimeUser();
-    fetchPotentialMatches();
-  }, []);
+    initializeHomePage();
+  }, [navigate]);
 
   const handleSwipeLeft = () => {
     setCurrentIndex(prev => prev + 1);
@@ -298,7 +294,7 @@ export default function HomePage() {
           sx={{
             display: 'flex',
             justifyContent: 'flex-start',
-            mt: { xs: 15, sm: 20, md: 13 },
+            mt: { xs: 15, sm: 20, md: 8 },
             ml: { xs: 2, sm: 6, md: 40 },
           }}
         >

@@ -47,11 +47,6 @@ const steps = [
       description: 'Fill out your information below',
     },
     {
-      title: 'Welcome to CapstoneConnect!',
-      subtitle: 'Update your Profile',
-      description: 'Fill out your information below',
-    },
-    {
       title: 'Congrats! You’ve completed the first step!',
       subtitle: '',
       description: 'You can now connect with other students!',
@@ -457,19 +452,7 @@ const handleAvatarChange = async (e) => {
 </Box>
     </Box>
   );
-      case 3:
-        return (
-          <Box mt={3}>
-            <Button variant="outlined" component="label">
-              Upload Resume
-              <Input type="file" hidden onChange={handleResumeChange} />
-            </Button>
-            {resume && (
-              <Typography mt={2}>Uploaded: {resume}</Typography>
-            )}
-          </Box>
-        );
-        case 4:
+        case 3:
             return (
               <Box mt={3} display="flex" flexDirection="column" gap={2} sx={{mt: 9}}>
                 <TextField
@@ -724,7 +707,7 @@ const handleAvatarChange = async (e) => {
 
               </Box>
             );
-            case 5:
+            case 4:
   return (
     <Box
       sx={{

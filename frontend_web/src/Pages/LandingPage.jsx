@@ -97,7 +97,7 @@ export default function LandingPage() {
         <meta name="description" content="Swipe, match and collaborate with classmates" />
       </Helmet>
       <Box sx={{ backgroundColor: '#EEECEC', minHeight: '100vh' }}>
-      <AppBar className="navbar" color="default" sx={{height: 115, justifyContent: 'center'}}>
+      <AppBar className="navbar" color="default" sx={{height: 90, justifyContent: 'center'}}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between'}}>
         <Button onClick={scrollToHome}>
         <img

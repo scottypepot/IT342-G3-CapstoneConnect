@@ -119,7 +119,7 @@ useEffect(() => {
           justifyContent: 'space-between', 
           alignItems: 'center', 
           px: 40, // same as ml/mr below to align with the card
-          mt: 20 
+          mt: 10, // margin top for spacing 
         }}>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#003366', fontSize: 28 }}>
               Profile
@@ -134,7 +134,7 @@ useEffect(() => {
         {/* Profile Content */}
         <Box
               sx={{
-                mt: 15,
+                mt: 9.5,
                 ml: 15,
                 mr: 15,
                 display: 'flex',

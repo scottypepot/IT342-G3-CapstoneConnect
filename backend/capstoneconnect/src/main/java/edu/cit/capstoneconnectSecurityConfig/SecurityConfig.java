@@ -8,12 +8,34 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Configuration
+@RestController
 public class SecurityConfig {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("/api/auth/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        // Invalidate the session
+        if (session != null) {
+            session.invalidate();
+        }
+        
+        // Clear security context
+        SecurityContextHolder.clearContext();
+        
+        return ResponseEntity.ok().build();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,6 +50,7 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight requests
+                        .requestMatchers("/api/auth/logout").permitAll()
                         .anyRequest().authenticated() // All other requests must be authenticated
                 )
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity (only if necessary)
@@ -36,10 +59,24 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("http://localhost:5173")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
+                        .addLogoutHandler(new SecurityContextLogoutHandler())
+                        .addLogoutHandler((request, response, authentication) -> {
+                            HttpSession session = request.getSession(false);
+                            if (session != null) {
+                                session.invalidate();
+                            }
+                            
+                            // Clear all cookies
+                            Cookie[] cookies = request.getCookies();
+                            if (cookies != null) {
+                                for (Cookie cookie : cookies) {
+                                    cookie.setValue("");
+                                    cookie.setPath("/");
+                                    cookie.setMaxAge(0);
+                                    response.addCookie(cookie);
+                                }
+                            }
+                        })
                         .permitAll()
                 );
 
