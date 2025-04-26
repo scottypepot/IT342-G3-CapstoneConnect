@@ -32,6 +32,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/" element={<LandingPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/:matchId" element={<MessagesPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/edit-profile" element={<EditProfilePage/>} />
             <Route path="/chat/:userId" element={<ChatPage />} />

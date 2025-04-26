@@ -9,7 +9,8 @@ import {
   Chip,
   InputAdornment,
   AppBar,
-  Toolbar
+  Toolbar,
+  Modal
 } from '@mui/material';
 import { ArrowBack, Edit, Add, ExpandMore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +31,32 @@ export default function EditProfilePage() {
   const [interests, setInterests] = useState([]);
   const [avatar, setAvatar] = useState(null);
   const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState("");
+  const [skillsModalOpen, setSkillsModalOpen] = useState(false);
+  const [interestsModalOpen, setInterestsModalOpen] = useState(false);
+
+  const SKILLS = [
+    'JavaScript',
+    'Python',
+    'Java',
+    'C++',
+    'React',
+    'Node.js',
+    'UI/UX Design',
+    'Database Management',
+    'Machine Learning',
+    'Mobile Development'
+  ];
+
+  const INTERESTS = [
+    'Frontend Development',
+    'Backend Development',
+    'Mobile Development',
+    'Artificial Intelligence',
+    'Software Development',
+    'Chatbots',
+    'Cybersecurity',
+    'UI/UX Design'
+  ];
 
   // Fetch user data when component mounts
   useEffect(() => {
@@ -133,6 +160,22 @@ export default function EditProfilePage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleSkillSelect = (skill) => {
+    if (!skills.includes(skill)) {
+      setSkills([...skills, skill]);
+    } else {
+      setSkills(skills.filter((s) => s !== skill));
+    }
+  };
+
+  const handleInterestSelect = (interest) => {
+    if (!interests.includes(interest)) {
+      setInterests([...interests, interest]);
+    } else {
+      setInterests(interests.filter((i) => i !== interest));
+    }
+  };
+
   return (
     <Box sx={{ p: 5, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
         <AppBar className="navbar" color="default" sx={{ height: 100, justifyContent: 'center' }}>
@@ -234,9 +277,18 @@ export default function EditProfilePage() {
         </Typography>
         <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
           {skills.map(skill => (
-            <Chip key={skill} label={skill} sx={{ backgroundColor: '#e0e0e0' }} />
+            <Chip 
+              key={skill} 
+              label={skill} 
+              onDelete={() => handleSkillSelect(skill)}
+              sx={{ backgroundColor: '#FFD700' }} 
+            />
           ))}
-          <IconButton size="small" sx={{ backgroundColor: '#ccc' }}>
+          <IconButton 
+            size="small" 
+            sx={{ backgroundColor: '#ccc' }}
+            onClick={() => setSkillsModalOpen(true)}
+          >
             <Add fontSize="small" />
           </IconButton>
         </Box>
@@ -249,9 +301,18 @@ export default function EditProfilePage() {
         </Typography>
         <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
           {interests.map(interest => (
-            <Chip key={interest} label={interest} sx={{ backgroundColor: '#d0e8ff' }} />
+            <Chip 
+              key={interest} 
+              label={interest} 
+              onDelete={() => handleInterestSelect(interest)}
+              sx={{ backgroundColor: '#00C1A0' }} 
+            />
           ))}
-          <IconButton size="small" sx={{ backgroundColor: '#ccc' }}>
+          <IconButton 
+            size="small" 
+            sx={{ backgroundColor: '#ccc' }}
+            onClick={() => setInterestsModalOpen(true)}
+          >
             <Add fontSize="small" />
           </IconButton>
         </Box>
@@ -286,6 +347,170 @@ export default function EditProfilePage() {
           Save Changes
         </Button>
       </Box>
+
+      {/* Skills Modal */}
+      <Modal open={skillsModalOpen} onClose={() => setSkillsModalOpen(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 900,
+            height: 600,
+            bgcolor: '#2E2F44',
+            borderRadius: 2,
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant='subtitle1' sx={{textAlign: 'center',fontSize: 30, color: '#4CAF50', fontWeight: 600, borderBottom: '2px solid white', width: '100%'}}>
+            Skills
+          </Typography>
+          <Box sx={{ textAlign: 'left', width: '100%', ml: 20}}>
+            <Typography variant="subtitle1" sx={{ fontSize: 16, color: 'white' }}>
+              Select your skills
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: 2,
+            }}
+          >
+            {SKILLS.map((skill) => {
+              const isSelected = skills.includes(skill);
+              return (
+                <Box
+                  key={skill}
+                  onClick={() => handleSkillSelect(skill)}
+                  sx={{
+                    width: 300,
+                    height: 45,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: isSelected ? '#FFD700' : 'grey.400',
+                    backgroundColor: isSelected ? '#FFD700' : '#577058',
+                    color: isSelected ? 'black' : 'white',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      backgroundColor: isSelected ? '#FFD700' : 'rgba(0,0,0,0.05)',
+                    },
+                  }}
+                >
+                  {skill}
+                </Box>
+              );
+            })}
+          </Box>
+
+          <Button 
+            variant="contained" 
+            onClick={() => setSkillsModalOpen(false)}
+            sx={{ 
+              mt: 4,
+              backgroundColor: '#0C4278',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#0C4278',
+              },
+            }}
+          >
+            Save Skills
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* Interests Modal */}
+      <Modal open={interestsModalOpen} onClose={() => setInterestsModalOpen(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 900,
+            height: 600,
+            bgcolor: '#2E2F44',
+            borderRadius: 2,
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant='subtitle1' sx={{textAlign: 'center',fontSize: 30, color: '#4CAF50', fontWeight: 600, borderBottom: '2px solid white', width: '100%'}}>
+            Interests
+          </Typography>
+          <Box sx={{ textAlign: 'left', width: '100%', ml: 20}}>
+            <Typography variant="subtitle1" sx={{ fontSize: 16, color: 'white' }}>
+              You can choose 4 interests
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: 2,
+            }}
+          >
+            {INTERESTS.map((interest) => {
+              const isSelected = interests.includes(interest);
+              return (
+                <Box
+                  key={interest}
+                  onClick={() => handleInterestSelect(interest)}
+                  sx={{
+                    width: 300,
+                    height: 45,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: isSelected ? '#00C1A0' : 'grey.400',
+                    backgroundColor: isSelected ? '#00C1A0' : '#577058',
+                    color: isSelected ? 'black' : 'white',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      backgroundColor: isSelected ? '#00C1A0' : 'rgba(0,0,0,0.05)',
+                    },
+                  }}
+                >
+                  {interest}
+                </Box>
+              );
+            })}
+          </Box>
+
+          <Button 
+            variant="contained" 
+            onClick={() => setInterestsModalOpen(false)}
+            sx={{ 
+              mt: 4,
+              backgroundColor: '#0C4278',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#0C4278',
+              },
+            }}
+          >
+            Save Interests
+          </Button>
+        </Box>
+      </Modal>
     </Box>
   );
 }

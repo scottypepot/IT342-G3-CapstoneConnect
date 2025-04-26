@@ -57,14 +57,10 @@ public class SecurityConfig {
             System.out.println("✅ OAuth Login Successful - Processing User Data");
 
             // Save user if not exists
-            boolean isFirstTimeUser = userService.saveUserIfNotExists(oauthId, email, name);
+            userService.saveUserIfNotExists(oauthId, email, name);
 
-            // Redirect based on user status
-            if (isFirstTimeUser) {
-                response.sendRedirect("http://localhost:5173/home");
-            } else {
-                response.sendRedirect("http://localhost:5173/profile");
-            }
+            // Always redirect to home page, let frontend handle the flow
+            response.sendRedirect("http://localhost:5173/home");
         };
     }
 }

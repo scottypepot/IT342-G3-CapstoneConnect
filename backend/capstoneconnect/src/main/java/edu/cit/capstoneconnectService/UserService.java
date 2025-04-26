@@ -1,19 +1,24 @@
 package edu.cit.capstoneconnectService;
 
 import edu.cit.capstoneconnectEntity.UserEntity;
+import edu.cit.capstoneconnectMatch.Match;
 import edu.cit.capstoneconnectRepository.UserRepository;
+import edu.cit.capstoneconnectRepository.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final MatchRepository matchRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, MatchRepository matchRepository) {
         this.userRepository = userRepository;
+        this.matchRepository = matchRepository;
     }
 
     public Optional<UserEntity> findByOauthId(String oauthId) {
@@ -78,5 +83,48 @@ public class UserService {
             return userRepository.save(user);
         }
         throw new RuntimeException("User not found");
+    }
+
+    @Transactional
+    public void updateFirstTimeUserStatus(Long userId, boolean isFirstTimeUser) {
+        Optional<UserEntity> existingUser = userRepository.findById(userId);
+        if (existingUser.isPresent()) {
+            UserEntity user = existingUser.get();
+            user.setFirstTimeUser(isFirstTimeUser);
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @Transactional
+    public void saveMatch(Match match) {
+        matchRepository.save(match);
+    }
+
+    public List<UserEntity> findAll() {
+        return userRepository.findAll();
+    }
+
+    public Optional<Match> findMatchById(Long matchId) {
+        return matchRepository.findById(matchId);
+    }
+
+    public Optional<Match> findMatchBetweenUsers(Long userId1, Long userId2) {
+        return matchRepository.findByUserIdAndMatchedUserId(userId1, userId2);
+    }
+
+    public List<Match> findUserMatches(Long userId) {
+        return matchRepository.findMatchesByUserId(userId);
+    }
+
+    @Transactional
+    public void deleteMatch(Long matchId) {
+        Optional<Match> match = matchRepository.findById(matchId);
+        if (match.isPresent()) {
+            matchRepository.delete(match.get());
+        } else {
+            throw new RuntimeException("Match not found");
+        }
     }
 }

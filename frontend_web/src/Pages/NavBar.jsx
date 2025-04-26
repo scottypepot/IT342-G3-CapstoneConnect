@@ -27,6 +27,7 @@ const Navbar = () => {
     } catch (error) {
         console.error("❌ Logout failed:", error);
     }
+  };
 
   return (
     <AppBar color="default" sx={{ height: 100, justifyContent: 'center' }}>
