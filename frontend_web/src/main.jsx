@@ -5,8 +5,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css'
 import App from './App.jsx'
 import LandingPage from './Pages/LandingPage.jsx';
+import HomePage from './Pages/HomePage.jsx';
 import MessagesPage from './Pages/MessagesPage.jsx';
+import ProfilePage from './Pages/ProfilePage.jsx';
+import EditProfilePage from './Pages/EditProfilePage.jsx';
+import ChatPage from './Pages/ChatPage';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+
 
 const theme = createTheme({
   palette: {
@@ -25,8 +30,12 @@ createRoot(document.getElementById('root')).render(
       <Router>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            {/* <Route path="/home" element={<HomePage />} /> */}
+            <Route path="/home" element={<HomePage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/:matchId" element={<MessagesPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/edit-profile" element={<EditProfilePage/>} />
+            <Route path="/chat/:userId" element={<ChatPage />} />
           </Routes>
       </Router>
     </ThemeProvider>
