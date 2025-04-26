@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-
 const Navbar = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleArrowClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
 
   const handleLogout = async () => {
     try {
@@ -27,7 +27,6 @@ const Navbar = () => {
     } catch (error) {
         console.error("❌ Logout failed:", error);
     }
-  };
 
   return (
     <AppBar color="default" sx={{ height: 100, justifyContent: 'center' }}>

@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { AppBar, Toolbar, Button, Typography, Container, Box, Grid, Card, CardContent, Avatar } from '@mui/material';
 import '../styles/LandingCss.css';
 import groupImage from '../assets/groupimage.png';
@@ -12,25 +12,30 @@ import Acad from '../assets/acad.png';
 import { Helmet } from 'react-helmet';
 import SignUpModal from './SignUpModal';
 import LogInModal from './LogInModal';
+
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+=======
 import { useEffect } from "react";
 import { getAuthenticatedUser } from "./authService"; 
+
 
 
 const developers = [
   {
     name: 'Jhovynn Aldrich Apurado',
     role: 'Mobile Developer',
-    image: 'https://via.placeholder.com/100',
+    image: '/apurado.jpg',
   },
   {
     name: 'Scott Benzer Gitgano',
     role: 'Frontend Developer',
-    image: 'https://via.placeholder.com/100',
+    image: '/gitgano.jpg',
   },
   {
     name: 'John Gerard Donaire',
     role: 'Backend Developer',
-    image: 'https://via.placeholder.com/100',
+    image: '/donaire.jpg',
   },
 ];
 
@@ -58,6 +63,7 @@ const scrollToHome = () => {
     behavior: 'smooth'
   })
 }
+
 export default function LandingPage() {
   const [modalType, setModalType] = useState(null);
 
@@ -80,7 +86,12 @@ export default function LandingPage() {
   const handleOpenModal = (type) => setModalType(type);
   const handleCloseModal = () => setModalType(null);
 
-
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, 
+    });
+  }, []);
+  
   return (
     <>
       <Helmet>
@@ -118,14 +129,20 @@ export default function LandingPage() {
   <Container maxWidth="xl" sx={{ py: { xs: 3, md: 6 } }}>
     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' },gap: 4, alignItems: 'center', mt: { xs: 4, md: 10 } }}>
       {/* Text Column */}
+      <div data-aos="fade-right">
       <Box sx={{ flex: 1, pr: { md: 4 }, textAlign: 'left', width: '100%'}}>
         <Typography 
-          variant="h1" 
           sx={{ 
             color: '#003366', 
             fontWeight: 'bold',
-            fontSize: 90,
-            lineHeight: 1.1
+            fontSize: {
+              xs: 40,  // extra-small screens
+              sm: 60,  // small screens
+              md: 80,  // medium screens
+              lg: 90   // large screens and up
+            },
+            lineHeight: 1.1,
+            whiteSpace: 'nowrap'
           }}
         >
           Find your perfect
@@ -135,7 +152,12 @@ export default function LandingPage() {
           sx={{ 
             color: '#4CAF50', 
             fontWeight: 'bold',
-            fontSize: 90,
+            fontSize: {
+              xs: 40,  // extra-small screens
+              sm: 60,  // small screens
+              md: 80,  // medium screens
+              lg: 90   // large screens and up
+            },
             lineHeight: 1.1,
             mb: 2
           }}
@@ -167,7 +189,8 @@ export default function LandingPage() {
           Sign Up
         </Button>
       </Box>
-      
+      </div>
+      <div data-aos="fade-left">
       {/* Image Column */}
       <Box 
         sx={{ 
@@ -187,11 +210,13 @@ export default function LandingPage() {
           }}
         />
       </Box>
+    </div>
     </Box>
   </Container>
 </Box>
 
       <Container id="how-it-works" sx={{ py: 6, marginTop: 20, scrollMarginTop: 130 }}>
+      <div data-aos="fade-up" data-aos-anchor-placement="top-bottom">
         <Typography variant="h5" fontWeight="600" gutterBottom>
           HOW IT WORKS
         </Typography>
@@ -201,12 +226,14 @@ export default function LandingPage() {
         <Typography variant="subtitle1" fontWeight="300" gutterBottom sx={{fontSize: 23, maxWidth: 800, mx:'auto', marginTop: 3}}>
         <span style={{ color: 'black' }}>CapstoneConnect makes it easy to find teammates with complementary skills and interest</span>
         </Typography>
+        </div>
         </Container>
 
         <Box sx={{ width: '100%', px: 0}}> 
         <Container  maxWidth={false} sx={{ maxWidth: '1400px', marginTop: 6}}>
         <Grid container spacing={0} columns={24} sx={{maxHeight: 700}}>
           <Grid size={8}>
+          <div data-aos="zoom-in-right">
               <CardContent>
                 <img src={Acc} alt="create-account"/>
                 <Typography variant="h4" fontWeight="bold" fontSize={30} marginTop={2}>Create Your Profile</Typography>
@@ -214,8 +241,10 @@ export default function LandingPage() {
                 Show case your skills, project interest, goals, and your previous projects
                 </Typography>
               </CardContent>
+          </div>
           </Grid>
           <Grid size={8}>
+          <div data-aos="zoom-in-up">
               <CardContent>
               <img src={Swipe} alt="swiping"/>
                 <Typography variant="h4" fontWeight="bold" fontSize={30} marginTop={2}>Swipe to Connect</Typography>
@@ -223,8 +252,10 @@ export default function LandingPage() {
                 Browse through profiles and swipe right on students who you’d like to work with
                 </Typography>
               </CardContent>
+          </div>
           </Grid>
           <Grid size={8}>
+          <div data-aos="zoom-in-left">
               <CardContent>
               <img src={Communicate} alt="comms"/>
                 <Typography variant="h4" fontWeight="bold" fontSize={30} marginTop={2}>Connect & Collaborate</Typography>
@@ -232,20 +263,24 @@ export default function LandingPage() {
                   When there’s a mutual match, start chatting and planning your capstone project
                 </Typography>
               </CardContent>
+          </div>
           </Grid>
         </Grid>
       </Container>
       </Box>
 
       <Container id="features" sx={{ py: 6, marginTop: 19, scrollMarginTop: 130}}>
+      <div data-aos="fade-up" data-aos-anchor-placement="top-bottom">
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           FEATURES
         </Typography>
         <Typography variant="h2" fontWeight="bold" sx={{fontSize: 50}}>
         <span style={{ color: '#003366' }}>Everything you need to build your perfect team</span>
         </Typography>
+      </div>
         <Grid container spacing={3} columns={24} marginTop={13} justifyContent={'center'} gap={10}>
           <Grid size={6}>
+          <div data-aos="fade-up">
             <Card className="real-time" variant="outlined" sx={{height: '100%',minHeight: 250, alignContent: 'center', borderRadius: 4,border: '1px solid #7390AE', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)'}}>
               <CardContent sx={{textAlign: 'left'}}>
                 <img src={Notify} alt="notify"/>
@@ -255,8 +290,10 @@ export default function LandingPage() {
                 </Typography>
               </CardContent>
             </Card>
+            </div>
           </Grid>
           <Grid size={6}>
+          <div data-aos="fade-up">
             <Card className="mobile-friendly" variant="outlined" sx={{height: '100  %',minHeight: 250, alignContent: 'center',borderRadius: 4,border: '1px solid #7390AE', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)'}}>
               <CardContent sx={{textAlign: 'left'}}>
               <img src={Mobile} alt="mobile"/>
@@ -266,8 +303,10 @@ export default function LandingPage() {
                 </Typography>
               </CardContent>
             </Card>
+            </div>
           </Grid>
           <Grid size={6}>
+          <div data-aos="fade-up">
             <Card className="academic" variant="outlined" sx={{height: '100%',minHeight: 250, alignContent: 'center', borderRadius: 4,border: '1px solid #7390AE', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)'}}>
               <CardContent sx={{textAlign: 'left'}}>
                 <img src={Acad} alt="acad"/>
@@ -277,6 +316,7 @@ export default function LandingPage() {
                 </Typography>
               </CardContent>
             </Card>
+            </div>
           </Grid>
         </Grid>
       </Container>

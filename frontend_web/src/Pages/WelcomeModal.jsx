@@ -352,7 +352,7 @@ const handleAvatarChange = async (e) => {
         case 2:
   return (
     <Box sx={{
-      mt: 8,
+      mt: 5,
       ml: 15,
       mr: 15,
       display: 'flex',
@@ -728,7 +728,7 @@ const handleAvatarChange = async (e) => {
   return (
     <Box
       sx={{
-        mt: 8,
+        mt: 5,
         ml: 15,
         mr: 15,
         display: 'flex',
@@ -914,68 +914,109 @@ const handleAvatarChange = async (e) => {
       disableEscapeKeyDown={step !== steps.length - 1}
     >
       <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '90vw',
-            height: '90vh',
-            maxWidth: 1200,
-            maxHeight: 800,
-            bgcolor: '#00645C',
-            borderRadius: 3,
-            boxShadow: 24,
-            p: 4,
-            textAlign: 'center',
-            overflow: 'auto',
-          }}
-        >
+  sx={{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '90vw',
+    height: '90vh',
+    maxWidth: 1200,
+    maxHeight: 800,
+    bgcolor: '#00645C',
+    borderRadius: 3,
+    boxShadow: 24,
+    p: 4,
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'auto', // Allow scrolling, but no visible scrollbar
+  }}
+>
+  <Typography variant="h2" fontWeight="bold" color='white' fontSize={65} mt={5}>
+    {steps[step].title}
+  </Typography>
 
-        <Typography variant="h2" fontWeight="bold" color='white' fontSize={65} mt={5}>
-          {steps[step].title}
-        </Typography>
+  <Box
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      flexGrow: 1, // Allow the content to take up the available space
+    }}
+  >
+    {/* Step Content */}
+    <Box sx={{ flexGrow: 1 }}>
+      {renderStepContent()}
+    </Box>
 
-        {renderStepContent()}
-
-        <Box
-            sx={{
-            position: 'absolute',
-            bottom: 70, // distance from bottom of modal
-            left: 15,
-            right: 15,
-            px: 4,
-            display: 'flex',
-            justifyContent: 'space-between',
-            }}
-        >
-        {step > 0 ? (
-    <Button
-      onClick={handleBack}
-      variant="outlined"
+    {/* Button container */}
+    <Box
       sx={{
-        backgroundColor: '#0C4278',
-        color: 'white',
-        width: 130,
-        height: 50,
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: 2,
+        flexDirection: { xs: 'column', sm: 'row' },
+        mt: 2, // margin-top to adjust space between content and buttons
+        padding: '10px 0',  // You can adjust padding here for proper spacing
       }}
     >
-      Back
-    </Button>
-  ) : (
-    <Box sx={{ width: 150 }} /> // Placeholder to keep spacing
-  )}
-        {step < steps.length - 1 ? (
-        <Button onClick={handleNext} variant="contained" sx={{backgroundColor: '#0C4278', color: 'white', width: 130,height: 50}}>
-        Next
+      {step > 0 ? (
+        <Button
+          onClick={handleBack}
+          variant="outlined"
+          sx={{
+            backgroundColor: '#0C4278',
+            color: 'white',
+            width: { xs: '100%', sm: 130 },
+            height: 50,
+          }}
+        >
+          Back
         </Button>
-        ) : (
-        <Button onClick={handleFinish} variant="contained" sx={{backgroundColor: '#0C4278', color: 'white', width: 130,height: 50}}>
-        Finish
+      ) : (
+        <Box sx={{ width: 150 }} />
+      )}
+
+      {step < steps.length - 1 ? (
+        <Button
+          onClick={handleNext}
+          variant="contained"
+          sx={{
+            backgroundColor: '#0C4278',
+            color: 'white',
+            width: { xs: '100%', sm: 130 },
+            height: 50,
+          }}
+        >
+          Next
         </Button>
-        )}
-        </Box>
+      ) : (
+        <Button
+          onClick={handleFinish}
+          variant="contained"
+          sx={{
+            backgroundColor: '#0C4278',
+            color: 'white',
+            width: { xs: '100%', sm: 130 },
+            height: 50,
+          }}
+        >
+          Finish
+        </Button>
+      )}
     </Box>
+  </Box>
+  <style>
+    {`
+      /* Hide scrollbar on webkit browsers (Chrome, Safari, Edge) */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    `}
+  </style>
+</Box>
+
     </Modal>
     <InterestsModal
       open={interestsModalOpen}
