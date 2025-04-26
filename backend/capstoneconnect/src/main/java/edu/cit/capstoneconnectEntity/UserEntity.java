@@ -2,6 +2,9 @@ package edu.cit.capstoneconnectEntity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -18,13 +21,38 @@ public class UserEntity {
 
     @Column(unique = true, nullable = false)
     private String oauthId;  // Store Microsoft's OAuth ID (but NOT auto-incremented)
+    // New fields
+    private String profilePicture; // URL or file path
+    private String resume; // URL or file path
+    private String role;
+    private String about;
+    private boolean firstTimeUser = true;
+    @ElementCollection
+    @CollectionTable(name = "user_skills", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "skill")
+    private List<String> skills = new ArrayList<>();
 
-    public UserEntity() {}
+    @ElementCollection
+    @CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "interest")
+    private List<String> interests = new ArrayList<>();
 
+    private String githubLink;
+
+    public UserEntity() {
+
+    }
     public UserEntity(String oauthId, String email, String name) {
         this.oauthId = oauthId;
         this.email = email;
         this.name = name;
+        this.profilePicture = ""; // Default value
+        this.resume = "";         // Default value
+        this.role = "User";       // Default value
+        this.about = "";          // Default value
+        this.skills = new ArrayList<>(); // Default value
+        this.interests = new ArrayList<>(); // Default value
+        this.githubLink = "";     // Default value
     }
     // Getters and Setters
     public Long getId() {
@@ -53,5 +81,68 @@ public class UserEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getResume() {
+        return resume;
+    }
+
+    public void setResume(String resume) {
+        this.resume = resume;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public List<String> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
+    }
+
+    public List<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(List<String> interests) {
+        this.interests = interests;
+    }
+
+    public String getGithubLink() {
+        return githubLink;
+    }
+
+    public void setGithubLink(String githubLink) {
+        this.githubLink = githubLink;
+    }
+    public boolean isFirstTimeUser() {
+        return firstTimeUser;
+    }
+
+    public void setFirstTimeUser(boolean firstTimeUser) {
+        this.firstTimeUser = firstTimeUser;
     }
 }

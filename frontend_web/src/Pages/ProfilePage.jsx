@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet';
 import Logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Pages/NavBar';
+import { getAuthenticatedUser } from "./authService";
+
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -14,33 +16,93 @@ export default function ProfilePage() {
     fullName: '',
     role: '',
     about: '',
-    githublink: ''
+    githubLink: ''
   });
   
   const [skills, setSkills] = useState([]);
   const [interests, setInterests] = useState([]);
   const [avatar, setAvatar] = useState('');
-
-  // Load user data from localStorage that was saved during welcome modal
   useEffect(() => {
-    const savedFormData = localStorage.getItem('formData');
-    const savedSkills = localStorage.getItem('skills');
-    const savedInterests = localStorage.getItem('interests');
-    const savedAvatar = localStorage.getItem('avatar');
-    
-    if (savedFormData) {
+    const fetchAuthenticatedUser = async () => {
+        try {
+            // Fetch authenticated user and populate sessionStorage
+            const user = await getAuthenticatedUser();
+            if (user) {
+                console.log("✅ Authenticated user fetched:", user);
+
+                // Store user data in sessionStorage
+                sessionStorage.setItem("userId", user.id);
+                sessionStorage.setItem("user", JSON.stringify(user));
+
+                // Fetch profile data using the user ID
+                fetchProfileData(user.id);
+            } else {
+                console.error("❌ Failed to fetch authenticated user.");
+            }
+        } catch (error) {
+            console.error("❌ Error fetching authenticated user:", error);
+        }
+    };
+
+    const fetchProfileData = async (userId) => {
+        if (!userId) {
+            console.error("❌ User ID is missing. Cannot fetch profile.");
+            return;
+        }
+
+        try {
+            console.log("🔍 Fetching profile data for user ID:", userId);
+            const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("✅ Fetched profile data:", data);
+                setFormData(data);
+                setSkills(data.skills || []);
+                setInterests(data.interests || []);
+                setAvatar(data.profilePicture || "/uploads/default-avatar.png");
+            } else {
+                console.error("❌ Failed to fetch profile data. Status:", response.status);
+            }
+        } catch (error) {
+            console.error("❌ Failed to fetch profile data:", error);
+        }
+    };
+
+    // Check if sessionStorage already has userId
+    const userId = sessionStorage.getItem("userId");
+    if (userId) {
+        console.log("🔍 User ID found in sessionStorage:", userId);
+        fetchProfileData(userId);
+    } else {
+        console.log("🔍 User ID not found in sessionStorage. Fetching authenticated user...");
+        fetchAuthenticatedUser();
+    }
+}, []);
+
+useEffect(() => {
+  const savedFormData = sessionStorage.getItem('formData');
+  const savedSkills = sessionStorage.getItem('skills');
+  const savedInterests = sessionStorage.getItem('interests');
+  const savedAvatar = sessionStorage.getItem('avatar');
+
+  // Only update state if sessionStorage has data and state is not already set
+  if (!formData.fullName && savedFormData) {
       setFormData(JSON.parse(savedFormData));
-    }
-    if (savedSkills) {
+  }
+  if (skills.length === 0 && savedSkills) {
       setSkills(JSON.parse(savedSkills));
-    }
-    if (savedInterests) {
+  }
+  if (interests.length === 0 && savedInterests) {
       setInterests(JSON.parse(savedInterests));
-    }
-    if (savedAvatar) {
+  }
+  if (!avatar && savedAvatar) {
       setAvatar(savedAvatar);
-    }
-  }, []);
+  }
+}, []); // Empty dependency array ensures this runs only once
+
 
   return (
     <>
@@ -110,6 +172,7 @@ export default function ProfilePage() {
                   >
                     <img
                       src={avatar}
+                      className="profile-image"
                       alt="Profile"
                       style={{
                         width: '100%',
@@ -205,14 +268,14 @@ export default function ProfilePage() {
                     
                     <Typography variant="h6" fontWeight="bold">GitHub</Typography>
                     <Box mt={1}>
-                      {formData.githublink ? (
+                      {formData.githubLink ? (
                         <a
-                          href={formData.githublink}
+                          href={formData.githubLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ color: '#0077cc' }}
                         >
-                          {formData.githublink}
+                          {formData.githubLink}
                         </a>
                       ) : (
                         'No GitHub link provided.'

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -14,24 +14,120 @@ import {
 import { ArrowBack, Edit, Add, ExpandMore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo.png';
+
 export default function EditProfilePage() {
   const navigate = useNavigate();
-
+  const fileInputRef = useRef();
+  
   const [formData, setFormData] = useState({
-    fullName: 'Gitgano, Scott Benzer',
-    role: 'Frontend Developer',
-    about:
-      "I'm a Frontend Developer specializing in JavaScript and ReactJS, building sleek, user-friendly interfaces with a strong focus on performance, responsiveness, and modern design.",
-    github: 'https://github.com/vyn23232',
+    fullName: '',
+    role: '',
+    about: '',
+    github: '',
   });
 
-  const [skills, setSkills] = useState(['Java', 'JavaScript', 'UI/UX Design', 'Figma', 'C#']);
-  const [interests, setInterests] = useState([
-    'Mobile Development',
-    'Collaboration',
-    'Working on Projects',
-    'Learning new Skills',
-  ]);
+  const [skills, setSkills] = useState([]);
+  const [interests, setInterests] = useState([]);
+  const [avatar, setAvatar] = useState(null);
+  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState("");
+
+  // Fetch user data when component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = sessionStorage.getItem("userId");
+        if (!userId) {
+          console.error("User ID not found");
+          return;
+        }
+
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+          credentials: "include"
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setFormData({
+            fullName: data.fullName || '',
+            role: data.role || '',
+            about: data.about || '',
+            github: data.githubLink || '',
+          });
+          setSkills(data.skills || []);
+          setInterests(data.interests || []);
+          setAvatar(data.profilePicture || '/profile-placeholder.png');
+        } else {
+          console.error("Failed to fetch profile data");
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      const userId = sessionStorage.getItem("userId");
+      if (!userId) {
+        console.error("User ID not found");
+        return;
+      }
+
+      const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          role: formData.role,
+          about: formData.about,
+          skills,
+          interests,
+          githubLink: formData.github,
+          profilePicture: uploadedAvatarUrl || avatar,
+        }),
+      });
+
+      if (response.ok) {
+        navigate('/profile');
+      } else {
+        console.error("Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Show preview
+    const previewUrl = URL.createObjectURL(file);
+    setAvatar(previewUrl);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("http://localhost:8080/api/upload-profile-picture", {
+        method: "POST",
+        body: formData,
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUploadedAvatarUrl(data.fileUrl);
+      } else {
+        console.error("Failed to upload profile picture");
+      }
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+    }
+  };
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -66,14 +162,22 @@ export default function EditProfilePage() {
       <Box display="flex" flexDirection="column" alignItems="center" mt={15}>
         <Box sx={{ position: 'relative' }}>
           <Avatar
-            src="/profile-placeholder.png"
+            src={avatar}
             sx={{ width: 100, height: 100, border: '2px solid #ccc' }}
           />
           <IconButton
+            onClick={() => fileInputRef.current.click()}
             sx={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: 'white' }}
           >
             <Edit fontSize="small" />
           </IconButton>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleAvatarChange}
+          />
         </Box>
 
         <Box textAlign="center" mt={2}>
@@ -164,6 +268,23 @@ export default function EditProfilePage() {
           onChange={e => handleChange('github', e.target.value)}
           sx={{ mt: 1, backgroundColor: 'white', borderRadius: 1 }}
         />
+      </Box>
+
+      {/* Add Save Button */}
+      <Box mt={4} display="flex" justifyContent="center">
+        <Button
+          variant="contained"
+          onClick={handleSave}
+          sx={{
+            backgroundColor: '#003366',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#002244',
+            },
+          }}
+        >
+          Save Changes
+        </Button>
       </Box>
     </Box>
   );

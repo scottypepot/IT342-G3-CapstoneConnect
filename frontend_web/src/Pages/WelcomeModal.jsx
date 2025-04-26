@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { getAuthenticatedUser } from "./authService";
 import {
     Modal,
     Box,
@@ -185,18 +186,117 @@ export default function WelcomeModal({ open, onClose }) {
   const [interests, setInterests] = useState([]);
   const [interestsModalOpen, setInterestsModalOpen] = useState(false);
   const [skillsOpen, setSkillsOpen] = useState(false);
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const user = await getAuthenticatedUser();
+            if (user) {
+                console.log("✅ User authenticated:", user);
+                setFormData((prev) => ({
+                    ...prev,
+                    fullName: user.name,
+                    role: user.role,
+                    about: user.about,
+                    skills: user.skills || [],
+                    interests: user.interests || [],
+                    githubLink: user.githubLink || "",
+                    profilePicture: user.profilePicture || "",
+                }));
+            }
+        } catch (error) {
+            console.error("❌ Failed to fetch user data:", error);
+        }
+    };
+    fetchUserData();
+}, []);
 
   const fileInputRef = useRef();
   const handleNext = () => setStep(prev => Math.min(prev + 1, steps.length - 1));
   const handleBack = () => setStep(prev => Math.max(prev - 1, 0));
-  const handleFinish = () => {
-    onClose();
-    setStep(0); // Reset if needed
-  };
+  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState("");
+  const handleFinish = async () => {
+    try {
+        const userId = sessionStorage.getItem("userId");
+        if (!userId) {
+            console.error("❌ User ID is missing. Cannot update profile.");
+            return;
+        }
 
-  const handleAvatarChange = (e) => {
-    setAvatar(URL.createObjectURL(e.target.files[0]));
-  };
+        // Ensure we have a valid profile picture URL
+        const profilePictureUrl = uploadedAvatarUrl || "/uploads/default-avatar.png";
+
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                fullName: formData.fullName,
+                role: formData.role,
+                about: formData.about,
+                skills,
+                interests,
+                githubLink: formData.githublink,
+                profilePicture: profilePictureUrl,
+                resume,
+            }),
+            credentials: "include",
+        });
+
+        if (response.ok) {
+            console.log("✅ Profile updated successfully");
+            const updatedData = await response.json();
+
+            // Save updated data in sessionStorage
+            sessionStorage.setItem("formData", JSON.stringify(updatedData));
+            sessionStorage.setItem("skills", JSON.stringify(updatedData.skills));
+            sessionStorage.setItem("interests", JSON.stringify(updatedData.interests));
+            sessionStorage.setItem("avatar", updatedData.profilePicture);
+
+            // Redirect to profile page
+            window.location.href = "/home";
+        } else {
+            throw new Error("Failed to update profile");
+        }
+    } catch (error) {
+        console.error("❌ Failed to update profile:", error);
+    }
+};
+
+const handleAvatarChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) {
+      console.error("❌ No file selected.");
+      return;
+  }
+
+  // Optional: show preview (but don't save to state for submission)
+  const previewUrl = URL.createObjectURL(file);
+  setAvatar(previewUrl); // Show it visually only
+
+  try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("http://localhost:8080/api/upload-profile-picture", {
+          method: "POST",
+          body: formData,
+          credentials: 'include',
+          headers: {
+          },
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          console.log("✅ File uploaded successfully:", data);
+          setUploadedAvatarUrl(data.fileUrl);
+      } else {
+          console.error("❌ Failed to upload file. Status:", response.status);
+          const errorText = await response.text();
+          console.error("Error details:", errorText);
+      }
+  } catch (error) {
+      console.error("❌ Error uploading file:", error);
+  }
+};
 
   const handleResumeChange = (e) => {
     setResume(e.target.files[0].name);
@@ -599,7 +699,7 @@ export default function WelcomeModal({ open, onClose }) {
   </Box>
 )} 
       <TextField
-                  name="linkgithub"
+                  name="githublink"
                   label="Github Link"
                   value={formData.githublink}
                   onChange={handleInputChange}

@@ -10,10 +10,23 @@ const Navbar = () => {
 
   const handleArrowClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
-  const handleLogout = () => {
-    handleClose();
-    navigate('/login');
-  };
+
+
+  const handleLogout = async () => {
+    try {
+        // Clear all session storage
+        sessionStorage.clear();
+
+        // Clear all cookies
+        document.cookie.split(";").forEach(function(c) { 
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+
+        // Redirect to backend logout endpoint
+        window.location.href = "http://localhost:8080/logout";
+    } catch (error) {
+        console.error("❌ Logout failed:", error);
+    }
 
   return (
     <AppBar color="default" sx={{ height: 100, justifyContent: 'center' }}>
