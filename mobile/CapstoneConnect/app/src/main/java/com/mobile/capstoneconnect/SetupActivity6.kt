@@ -7,11 +7,19 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class SetupActivity6 : AppCompatActivity() {
+    private var selectedImageUri: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setup_page6)
 
-        // Data display logic from second version
+        // Get the image URI from the intent
+        selectedImageUri = intent.getStringExtra("SELECTED_IMAGE_URI")
+
+        // Log the URI for debugging
+        println("SetupActivity6 received image URI: $selectedImageUri")
+
+        // Data display logic
         val name = intent.getStringExtra("USER_NAME") ?: "N/A"
         val role = intent.getStringExtra("USER_ROLE") ?: "N/A"
         val about = intent.getStringExtra("USER_ABOUT") ?: "N/A"
@@ -22,18 +30,23 @@ class SetupActivity6 : AppCompatActivity() {
         findViewById<TextView>(R.id.setupPage6DisplayAbout).text = about
         findViewById<TextView>(R.id.setupPage6DisplaySkills).text = skills
 
-        // Back button logic (same in both versions)
         findViewById<Button>(R.id.setupPage6BackButton).setOnClickListener {
             finish()
         }
 
-        // Merged finish button logic: navigation to SetupActivity7 from first version
         findViewById<Button>(R.id.setupPage6NextButton).setOnClickListener {
-            // You can implement final save/submit logic here before navigation
-            startActivity(Intent(this, SetupActivity7::class.java))
+            val intent = Intent(this, SetupActivity7::class.java)
 
-            // Optional: Add flags if you want to clear the back stack
-            // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            // Pass the image URI to page 7
+            intent.putExtra("SELECTED_IMAGE_URI", selectedImageUri)
+
+            // Forward other user data if needed
+            intent.putExtra("USER_NAME", name)
+            intent.putExtra("USER_ROLE", role)
+            intent.putExtra("USER_ABOUT", about)
+            intent.putExtra("USER_SKILLS", skills)
+
+            startActivity(intent)
         }
     }
 }
