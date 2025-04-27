@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Button, Box, Menu, MenuItem, IconButton, Dialog, Dialo
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { API_URL } from '../config/api';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -39,12 +40,11 @@ const Navbar = () => {
     }
   };
 
-  const handleLogoutConfirm = async () => {
+  const handleLogout = async () => {
     try {
-      // First, call our backend logout
-      const response = await fetch("http://localhost:8080/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
+      const response = await fetch(`${API_URL}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
       });
 
       // Clear all browser data regardless of response
@@ -171,7 +171,7 @@ const Navbar = () => {
             No
           </Button>
           <Button 
-            onClick={handleLogoutConfirm}
+            onClick={handleLogout}
             variant="contained" 
             sx={{ 
               minWidth: 100,

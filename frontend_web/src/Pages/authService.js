@@ -1,6 +1,8 @@
+import { API_URL } from '../config/api';
+
 export const getAuthenticatedUser = async () => {
     try {
-        const response = await fetch("http://localhost:8080/api/auth/user", {
+        const response = await fetch(`${API_URL}/api/auth/user`, {
             credentials: "include", // Include cookies for session-based authentication
         });
 

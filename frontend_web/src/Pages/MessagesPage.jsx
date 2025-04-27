@@ -39,6 +39,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { format } from 'date-fns';
 import Navbar from './NavBar';
 import { useNavigate, useParams } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 // Define ProfilePreview as a separate component
 const ProfilePreview = ({ userId }) => {
@@ -47,7 +48,7 @@ const ProfilePreview = ({ userId }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+        const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
           credentials: 'include',
         });
         if (response.ok) {
@@ -247,7 +248,7 @@ export default function MessagesPage() {
 
   const fetchMatches = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${userId}/matches`, {
+      const response = await fetch(`${API_URL}/api/users/${userId}/matches`, {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
@@ -262,7 +263,7 @@ export default function MessagesPage() {
           matchId: match.matchId,
           name: match.name || 'Unknown User',
           profilePicture: match.profilePicture && !match.profilePicture.startsWith('http') 
-            ? `http://localhost:8080${match.profilePicture}` 
+            ? `${API_URL}${match.profilePicture}` 
             : match.profilePicture || '/uploads/default-avatar.png'
         }));
         setMatches(transformedData);
@@ -275,7 +276,7 @@ export default function MessagesPage() {
           }
         }
       } else if (response.status === 401 || response.status === 403) {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/microsoft';
+        window.location.href = `${API_URL}/oauth2/authorization/microsoft`;
       } else {
         console.error('Error fetching matches:', response.status);
       }
@@ -283,7 +284,7 @@ export default function MessagesPage() {
       console.error('Error fetching matches:', error);
       if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
         console.log('Authentication required. Redirecting to login...');
-        window.location.href = 'http://localhost:8080/oauth2/authorization/microsoft';
+        window.location.href = `${API_URL}/oauth2/authorization/microsoft`;
       }
     }
   };
@@ -292,7 +293,7 @@ export default function MessagesPage() {
     if (!matchId) return; // Don't fetch if no matchId
 
     try {
-      const response = await fetch(`http://localhost:8080/api/matches/${matchId}/messages?userId=${userId}`, {
+      const response = await fetch(`${API_URL}/api/matches/${matchId}/messages?userId=${userId}`, {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
@@ -303,7 +304,7 @@ export default function MessagesPage() {
         const data = await response.json();
         setMessages(data);
       } else if (response.status === 401 || response.status === 403) {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/microsoft';
+        window.location.href = `${API_URL}/oauth2/authorization/microsoft`;
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -318,7 +319,7 @@ export default function MessagesPage() {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/matches/${selectedMatch.matchId}/attachments`, {
+      const response = await fetch(`${API_URL}/api/matches/${selectedMatch.matchId}/attachments`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -345,7 +346,7 @@ export default function MessagesPage() {
       };
 
       // Send the message with the attachment
-      const messageResponse = await fetch(`http://localhost:8080/api/matches/${selectedMatch.matchId}/messages`, {
+      const messageResponse = await fetch(`${API_URL}/api/matches/${selectedMatch.matchId}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -395,7 +396,7 @@ export default function MessagesPage() {
         const isImage = attachment.contentType.startsWith('image/');
 
         if (isImage) {
-          const fullImageUrl = `http://localhost:8080${attachment.fileUrl}?view=true`;
+          const fullImageUrl = `${API_URL}${attachment.fileUrl}?view=true`;
           return (
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -488,7 +489,7 @@ export default function MessagesPage() {
                 variant="outlined"
                 size="small"
                 sx={{ mt: 1 }}
-                onClick={() => window.open(`http://localhost:8080${attachment.fileUrl}`, '_blank')}
+                onClick={() => window.open(`${API_URL}${attachment.fileUrl}`, '_blank')}
               >
                 Download
               </Button>
@@ -535,7 +536,7 @@ export default function MessagesPage() {
 
   const handleAcceptMatch = async (matchId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/matches/${matchId}/status`, {
+      const response = await fetch(`${API_URL}/api/matches/${matchId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -552,12 +553,12 @@ export default function MessagesPage() {
         await fetchMessages(matchId); // Refresh messages to show the acceptance message
         await fetchMatches();
       } else if (response.status === 401 || response.status === 403) {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/microsoft';
+        window.location.href = `${API_URL}/oauth2/authorization/microsoft`;
       }
     } catch (error) {
       console.error('Error accepting match:', error);
       if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/microsoft';
+        window.location.href = `${API_URL}/oauth2/authorization/microsoft`;
       }
     }
   };
@@ -565,7 +566,7 @@ export default function MessagesPage() {
   const handleRejectMatch = async (matchId) => {
     try {
       // Update the match status to REJECTED
-      const statusResponse = await fetch(`http://localhost:8080/api/matches/${matchId}/status`, {
+      const statusResponse = await fetch(`${API_URL}/api/matches/${matchId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -610,7 +611,7 @@ export default function MessagesPage() {
   const handleDeleteConversation = async () => {
     if (menuMatch) {
       try {
-        const response = await fetch(`http://localhost:8080/api/matches/${menuMatch.matchId}`, {
+        const response = await fetch(`${API_URL}/api/matches/${menuMatch.matchId}`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -647,7 +648,7 @@ export default function MessagesPage() {
     if (!content) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/matches/${selectedMatch.matchId}/messages`, {
+      const response = await fetch(`${API_URL}/api/matches/${selectedMatch.matchId}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

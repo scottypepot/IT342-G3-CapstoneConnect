@@ -15,6 +15,7 @@ import ConnectIcon from '../assets/connecticon.png';
 import PassIcon from '../assets/passicon.png';
 import Navbar from '../Pages/NavBar';
 import { getAuthenticatedUser } from "./authService";
+import { API_URL } from '../config/api';
 
 const SwipeCard = ({ profile, onSwipeLeft, onSwipeRight }) => {
   const cardRef = useRef(null);
@@ -226,7 +227,7 @@ export default function HomePage() {
         }
 
         // Then fetch potential matches using the user ID
-        const response = await fetch(`http://localhost:8080/api/users/${user.id}/potential-matches`, {
+        const response = await fetch(`${API_URL}/api/users/${user.id}/potential-matches`, {
           credentials: "include"
         });
 
@@ -254,7 +255,7 @@ export default function HomePage() {
     const profile = profiles[currentIndex];
     try {
       const userId = sessionStorage.getItem("userId");
-      const response = await fetch(`http://localhost:8080/api/users/${userId}/matches`, {
+      const response = await fetch(`${API_URL}/api/users/${userId}/matches`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

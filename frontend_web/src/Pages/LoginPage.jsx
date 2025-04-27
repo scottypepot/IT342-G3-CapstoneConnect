@@ -2,12 +2,13 @@ import React from 'react';
 import { Box, Button, Typography, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo.png';
+import { AUTH_URL } from '../config/api';
 
 export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleMicrosoftLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/microsoft';
+    window.location.href = AUTH_URL;
   };
 
   return (

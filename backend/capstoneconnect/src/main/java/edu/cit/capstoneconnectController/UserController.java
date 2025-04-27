@@ -36,7 +36,7 @@ import edu.cit.capstoneconnectRepository.FileAttachmentRepository;
 import java.time.LocalDateTime;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "${FRONTEND_URL}", allowCredentials = "true")
 public class UserController {
 	private final UserService userService;
 	@Autowired
@@ -114,9 +114,9 @@ public class UserController {
 				// Fix the profilePicture URL
 				String profilePicturePath = user.getProfilePicture();
 				if (profilePicturePath == null || profilePicturePath.isEmpty()) {
-					profilePicturePath = "/uploads/default-avatar.png"; // Default avatar
+					profilePicturePath = "/uploads/default-avatar.png";
 				} else if (!profilePicturePath.startsWith("http")) {
-					profilePicturePath = "http://localhost:8080" + profilePicturePath;
+					profilePicturePath = System.getenv("BACKEND_URL") + profilePicturePath;
 				}
 				profileData.put("profilePicture", profilePicturePath);
 

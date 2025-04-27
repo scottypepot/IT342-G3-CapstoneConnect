@@ -5,6 +5,7 @@ import Logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Pages/NavBar';
 import { getAuthenticatedUser } from "./authService";
+import { API_URL } from '../config/api';
 
 
 export default function ProfilePage() {
@@ -52,7 +53,7 @@ export default function ProfilePage() {
 
         try {
             console.log("🔍 Fetching profile data for user ID:", userId);
-            const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+            const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
                 credentials: "include",
             });
 
