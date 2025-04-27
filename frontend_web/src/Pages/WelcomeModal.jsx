@@ -20,6 +20,8 @@ import {
 } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import AddIcon from '@mui/icons-material/Add';
+import { API_URL } from '../config/api';
+
 const steps = [
     {
       title: 'Welcome to CapstoneConnect!',
@@ -221,7 +223,7 @@ export default function WelcomeModal({ open, onClose }) {
         const profilePictureUrl = uploadedAvatarUrl || "/uploads/default-avatar.png";
 
         // Update user profile
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+        const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -238,7 +240,7 @@ export default function WelcomeModal({ open, onClose }) {
 
         if (response.ok) {
             // Update firstTimeUser status
-            await fetch(`http://localhost:8080/api/users/${userId}/first-time`, {
+            await fetch(`${API_URL}/api/users/${userId}/first-time`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -271,7 +273,7 @@ const handleAvatarChange = async (e) => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("http://localhost:8080/api/upload-profile-picture", {
+      const response = await fetch(`${API_URL}/api/upload-profile-picture`, {
           method: "POST",
           body: formData,
           credentials: 'include',

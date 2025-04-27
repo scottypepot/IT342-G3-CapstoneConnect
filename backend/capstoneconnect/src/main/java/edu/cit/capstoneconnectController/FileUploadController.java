@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "${FRONTEND_URL}", allowCredentials = "true")
 public class FileUploadController {
 
     private final String uploadDir = System.getProperty("user.dir") + File.separator + "uploads";

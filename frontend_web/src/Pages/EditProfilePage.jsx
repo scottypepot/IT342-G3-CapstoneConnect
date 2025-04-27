@@ -18,6 +18,7 @@ import {
 import { ArrowBack, Edit, Add, ExpandMore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo.png';
+import { API_URL } from '../config/api';
 
 export default function EditProfilePage() {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ export default function EditProfilePage() {
           return;
         }
 
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+        const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
           credentials: "include"
         });
 
@@ -158,7 +159,7 @@ export default function EditProfilePage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+      const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -194,8 +195,9 @@ export default function EditProfilePage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("userId", sessionStorage.getItem("userId"));
 
-      const response = await fetch("http://localhost:8080/api/upload-profile-picture", {
+      const response = await fetch(`${API_URL}/api/upload-profile-picture`, {
         method: "POST",
         body: formData,
         credentials: 'include',

@@ -6,11 +6,12 @@ import Logo from '../assets/logo.png';
 import MLogo from '../assets/microsoftlogo.png'; 
 import CloseB from '../assets/closeicon.png';
 import { useEffect } from 'react';
+import { AUTH_URL } from '../config/api';
 
 export default function LoginModal({ open, handleClose}) {
   const handleMicrosoftLogin = () => {
-    window.location.href = "http://localhost:8080/api/auth/microsoft";
-};
+    window.location.href = AUTH_URL;
+  };
 
   return (
     <Modal open={open} onClose={handleClose}>
