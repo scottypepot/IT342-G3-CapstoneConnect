@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -11,7 +12,7 @@ const PrivateRoute = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/user', {
+      const response = await fetch(`${API_URL}/api/auth/user`, {
         credentials: 'include'
       });
 

@@ -10,8 +10,9 @@ import { API_URL } from '../config/api';
 export default function SignUpModal({ open, handleClose }) {
 
   const handleMicrosoftSignUp = () => {
-    window.location.href = `${API_URL}/api/auth/microsoft`;
-};
+    window.location.href = `${API_URL}/oauth2/authorization/microsoft`;
+  };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={{
