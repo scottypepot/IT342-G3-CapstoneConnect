@@ -1,25 +1,16 @@
-# Use the official OpenJDK 17 image as a parent image
-FROM eclipse-temurin:17-jdk-focal
-
-# Set the working directory in the container
+# Build stage
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
-
-# Copy the Maven wrapper files
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
-
-# Copy the source code
 COPY src ./src/
 COPY system.properties ./
-
-# Make the mvnw script executable
 RUN chmod +x mvnw
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
 
-# Build the application
-RUN ./mvnw clean package -DskipTests
-
-# Expose the port the app runs on
+# Run stage
+FROM eclipse-temurin:17-jre-focal
+WORKDIR /app
+COPY --from=build /app/target/capstoneconnect-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# Run the jar file
-CMD ["java", "-jar", "target/capstoneconnect-0.0.1-SNAPSHOT.jar"] 
+CMD ["java", "-jar", "app.jar"] 
