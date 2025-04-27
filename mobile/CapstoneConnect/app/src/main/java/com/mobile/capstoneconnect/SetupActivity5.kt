@@ -35,9 +35,6 @@ class SetupActivity5 : AppCompatActivity() {
                 putExtra("USER_ROLE", role)
                 putExtra("USER_ABOUT", about)
                 putExtra("USER_SKILLS", skills)
-
-                // Optional: clear back stack so user can't go back to SetupActivity5
-                // flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
 
             Toast.makeText(this, "Proceeding to next page", Toast.LENGTH_SHORT).show()
@@ -45,7 +42,7 @@ class SetupActivity5 : AppCompatActivity() {
         }
 
         backButton.setOnClickListener {
-            finish() // Goes back to previous activity
+            finish()
         }
     }
 }

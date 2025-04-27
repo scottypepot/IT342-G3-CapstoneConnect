@@ -1,13 +1,21 @@
 package com.mobile.capstoneconnect
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class SetupActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.setup_page2)
+
+        findViewById<Button>(R.id.setupPage2BackButton).setOnClickListener {
+            finish()
+        }
+
+        findViewById<Button>(R.id.setupPage2NextButton).setOnClickListener {
+            startActivity(Intent(this, SetupActivity3::class.java))
+        }
     }
 }

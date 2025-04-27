@@ -80,7 +80,7 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:fontFamily="@font/poppins"
-                        android:layout_marginBottom="4dp" />
+                        android:layout_marginTop="20dp" />
 
                     <TextView
                         android:id="@+id/setupPage6DisplayName"
@@ -152,7 +152,8 @@
                         android:textSize="15sp"
                         android:gravity="center"
                         android:fontFamily="@font/poppins"
-                        android:textColor="#333333" />
+                        android:textColor="#333333"
+                        android:paddingBottom="15dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -185,11 +186,11 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/setupPage6FinishButton"
+            android:id="@+id/setupPage6NextButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Finish"
+            android:text="Next"
             android:backgroundTint="#0C4278"
             android:fontFamily="@font/poppins" />
     </LinearLayout>
