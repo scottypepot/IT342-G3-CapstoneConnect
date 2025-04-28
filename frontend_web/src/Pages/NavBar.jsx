@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Button, Box, Menu, MenuItem, IconButton, Dialog, Dialo
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { API_URL } from '../config/api';
+import { API_URL, FRONTEND_URL } from '../config/api';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const Navbar = () => {
       
       // Construct the OIDC logout URL with all necessary parameters
       const logoutUrl = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/logout");
-      logoutUrl.searchParams.append("post_logout_redirect_uri", "http://localhost:5173");
+      logoutUrl.searchParams.append("post_logout_redirect_uri", FRONTEND_URL);
       logoutUrl.searchParams.append("client_id", clientId);
       logoutUrl.searchParams.append("state", Date.now().toString()); // Add state to prevent caching
       
@@ -66,7 +66,7 @@ const Navbar = () => {
       console.error("❌ Logout failed:", error);
       // If error occurs, still clear data and redirect
       clearAllBrowserData();
-      window.location.href = "http://localhost:5173";
+      window.location.href = FRONTEND_URL;
     }
   };
 
