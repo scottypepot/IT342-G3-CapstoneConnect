@@ -5,12 +5,12 @@ import Logo from '../assets/logo.png';
 import React, { useState } from 'react';
 import MLogo from '../assets/microsoftlogo.png';
 import CloseB from '../assets/closeicon.png';
-import { API_URL } from '../config/api';
+import { AUTH_URL } from '../config/api';
 
 export default function SignUpModal({ open, handleClose }) {
 
   const handleMicrosoftSignUp = () => {
-    window.location.href = `${API_URL}/oauth2/authorization/microsoft`;
+    window.location.href = AUTH_URL;
   };
 
   return (
