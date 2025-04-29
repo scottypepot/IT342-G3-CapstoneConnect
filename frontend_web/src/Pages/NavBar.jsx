@@ -50,15 +50,14 @@ const Navbar = () => {
       // Clear all browser data regardless of response
       clearAllBrowserData();
 
-      // Get the Microsoft tenant ID from your configuration
+      // Get the Microsoft tenant ID and client ID from your configuration
       const tenantId = "common"; // or your specific tenant ID
-      const clientId = "YOUR_CLIENT_ID"; // Your app's client ID
+      const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID;
       
       // Construct the OIDC logout URL with all necessary parameters
       const logoutUrl = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/logout");
       logoutUrl.searchParams.append("post_logout_redirect_uri", FRONTEND_URL);
       logoutUrl.searchParams.append("client_id", clientId);
-      logoutUrl.searchParams.append("state", Date.now().toString()); // Add state to prevent caching
       
       // Redirect to Microsoft logout
       window.location.href = logoutUrl.toString();
