@@ -13,7 +13,9 @@ import {
   Toolbar,
   Modal,
   Menu,
-  MenuItem  
+  MenuItem,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { ArrowBack, Edit, Add, ExpandMore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -42,6 +44,9 @@ export default function EditProfilePage() {
   const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState("");
   const [skillsModalOpen, setSkillsModalOpen] = useState(false);
   const [interestsModalOpen, setInterestsModalOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastSeverity, setToastSeverity] = useState('error');
 
   const SKILLS = [
     'JavaScript',
@@ -56,6 +61,15 @@ export default function EditProfilePage() {
     'Mobile Development'
   ];
 
+  const PREFER_ROLES = [
+    'Backend Developer',
+    'Frontend Developer',
+    'Mobile Developer',
+    'Project Manager',
+    'UI/UX Designer',
+    'Technical Writer'
+  ];
+
   const INTERESTS = [
     'Frontend Development',
     'Backend Development',
@@ -66,16 +80,33 @@ export default function EditProfilePage() {
     'Cybersecurity',
     'UI/UX Design'
   ];
-  const [anchorEl, setAnchorEl] = useState(null); // anchor for dropdown
 
-  const handleOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const [roleAnchorEl, setRoleAnchorEl] = useState(null);
+  const isRoleOpen = Boolean(roleAnchorEl);
+
+  const [skillsAnchorEl, setSkillsAnchorEl] = useState(null);
+  const isSkillsOpen = Boolean(skillsAnchorEl);
+
+  const handleRoleOpen = (event) => {
+    setRoleAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleRoleClose = () => {
+    setRoleAnchorEl(null);
   };
-  const isOpen = Boolean(anchorEl);
+
+  const handleRoleSelect = (role) => {
+    setFormData(prev => ({ ...prev, role }));
+    handleRoleClose();
+  };
+
+  const handleSkillsOpen = (event) => {
+    setSkillsAnchorEl(event.currentTarget);
+  };
+
+  const handleSkillsClose = () => {
+    setSkillsAnchorEl(null);
+  };
 
   // Fetch user data when component mounts
   useEffect(() => {
@@ -115,14 +146,21 @@ export default function EditProfilePage() {
 
   // Validation functions
   const validateName = (name) => {
-    const nameRegex = /^[a-zA-Z\s]*$/;
+    // Allow letters, spaces, periods, hyphens, and apostrophes
+    const nameRegex = /^[a-zA-Z .'-]+$/;
     return nameRegex.test(name);
   };
 
   const validateGithubLink = (link) => {
-    if (!link) return true; // Allow empty github link
-    const githubRegex = /^https:\/\/github\.com\/[a-zA-Z0-9-]+\/?$/;
-    return githubRegex.test(link);
+    if (!link) return true; // Allow empty field
+    const githubRegex = /^https:\/\/github\.com\/[a-zA-Z0-9-]+(\/[a-zA-Z0-9-]+)*\/?$/;
+    const isValid = githubRegex.test(link);
+    if (!isValid) {
+      setToastMessage('Please enter a valid GitHub URL (e.g., https://github.com/capstoneconnect)');
+      setToastSeverity('error');
+      setToastOpen(true);
+    }
+    return isValid;
   };
 
   const handleChange = (field, value) => {
@@ -131,31 +169,37 @@ export default function EditProfilePage() {
     // Validate fields
     if (field === 'fullName') {
       if (!validateName(value)) {
-        setErrors(prev => ({ ...prev, fullName: 'Name can only contain letters and spaces' }));
+        setErrors(prev => ({ ...prev, fullName: 'Name can only contain letters, spaces, periods, hyphens, and apostrophes' }));
       } else {
         setErrors(prev => ({ ...prev, fullName: '' }));
       }
     }
     
     if (field === 'github') {
-      if (!validateGithubLink(value)) {
-        setErrors(prev => ({ ...prev, github: 'Please enter a valid GitHub profile URL (e.g., https://github.com/username)' }));
-      } else {
-        setErrors(prev => ({ ...prev, github: '' }));
-      }
+      validateGithubLink(value);
     }
   };
 
   const handleSave = async () => {
-    // Validate before saving
-    if (!validateName(formData.fullName) || !validateGithubLink(formData.github)) {
-      return;
-    }
-
     try {
+      // Validate before saving
+      if (!validateName(formData.fullName)) {
+        setToastMessage('Please enter a valid name (letters, spaces, periods, hyphens, and apostrophes only)');
+        setToastSeverity('error');
+        setToastOpen(true);
+        return;
+      }
+
+      if (!validateGithubLink(formData.github)) {
+        setToastSeverity('error');
+        return; // The toast message is already set in validateGithubLink
+      }
+
       const userId = sessionStorage.getItem("userId");
       if (!userId) {
-        console.error("User ID not found");
+        setToastMessage('User session expired. Please log in again.');
+        setToastSeverity('error');
+        setToastOpen(true);
         return;
       }
 
@@ -175,12 +219,22 @@ export default function EditProfilePage() {
       });
 
       if (response.ok) {
-        navigate('/profile');
+        const data = await response.json();
+        setToastMessage('Profile changes saved successfully!');
+        setToastSeverity('success');
+        setToastOpen(true);
+        setTimeout(() => navigate('/profile'), 1200);
       } else {
-        console.error("Failed to update profile");
+        const errorData = await response.json();
+        setToastMessage(errorData.message || 'Failed to update profile. Please try again.');
+        setToastSeverity('error');
+        setToastOpen(true);
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+      setToastMessage('An error occurred while updating your profile. Please try again.');
+      setToastSeverity('error');
+      setToastOpen(true);
     }
   };
 
@@ -222,15 +276,19 @@ export default function EditProfilePage() {
     }
   };
 
-  const handleInterestSelect = (interest) => {
-    if (!interests.includes(interest)) {
-      if (interests.length >= 4) {
-        // Don't add more than 4 interests
-        return;
-      }
-      setInterests([...interests, interest]);
+  const toggleInterest = (interest) => {
+    if (interests.includes(interest)) {
+      setInterests((prev) => prev.filter((item) => item !== interest));
     } else {
-      setInterests(interests.filter((i) => i !== interest));
+      setInterests((prev) => {
+        if (prev.length < 4) {
+          return [...prev, interest];
+        } else {
+          // Remove the first and add the new one
+          const newSelection = prev.slice(1);
+          return [...newSelection, interest];
+        }
+      });
     }
   };
 
@@ -278,17 +336,24 @@ export default function EditProfilePage() {
           />
           <TextField
             value={formData.role}
-            onChange={e => handleChange('role', e.target.value)}
+            onClick={handleRoleOpen}
             variant="standard"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <Edit fontSize="small" />
+                  <ExpandMore 
+                    fontSize="small"
+                    sx={{
+                      transition: 'transform 0.2s',
+                      transform: isRoleOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                    }}
+                  />
                 </InputAdornment>
               ),
             }}
             sx={{ fontStyle: 'italic' }}
             fullWidth
+            readOnly
           />
         </Box>
       </Box>
@@ -305,6 +370,7 @@ export default function EditProfilePage() {
           multiline
           minRows={3}
           sx={{ mt: 1, backgroundColor: 'white', borderRadius: 1 }}
+          placeholder="Write something about yourself"
         />
       </Box>
 
@@ -325,7 +391,7 @@ export default function EditProfilePage() {
           <IconButton 
             size="small" 
             sx={{ backgroundColor: '#ccc' }}
-            onClick={handleOpen}
+            onClick={handleSkillsOpen}
           >
             <Add fontSize="small" />
           </IconButton>
@@ -347,7 +413,7 @@ export default function EditProfilePage() {
             <Chip 
               key={interest} 
               label={interest} 
-              onDelete={() => handleInterestSelect(interest)}
+              onDelete={() => toggleInterest(interest)}
               sx={{ backgroundColor: '#00C1A0' }} 
             />
           ))}
@@ -358,7 +424,15 @@ export default function EditProfilePage() {
               opacity: interests.length >= 4 ? 0.5 : 1,
               cursor: interests.length >= 4 ? 'not-allowed' : 'pointer'
             }}
-            onClick={() => interests.length < 4 && setInterestsModalOpen(true)}
+            onClick={() => {
+              if (interests.length >= 4) {
+                setToastMessage('4 project interests only are allowed');
+                setToastSeverity('error');
+                setToastOpen(true);
+              } else {
+                setInterestsModalOpen(true);
+              }
+            }}
           >
             <Add fontSize="small" />
           </IconButton>
@@ -399,9 +473,9 @@ export default function EditProfilePage() {
 
       {/* Skills Modal */}
       <Menu
-        anchorEl={anchorEl}
-        open={isOpen}
-        onClose={handleClose}
+        anchorEl={skillsAnchorEl}
+        open={isSkillsOpen}
+        onClose={handleSkillsClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -474,7 +548,7 @@ export default function EditProfilePage() {
               return (
                 <Box
                   key={interest}
-                  onClick={() => handleInterestSelect(interest)}
+                  onClick={() => toggleInterest(interest)}
                   sx={{
                     width: 300,
                     height: 45,
@@ -499,23 +573,64 @@ export default function EditProfilePage() {
               );
             })}
           </Box>
-
-          <Button 
-            variant="contained" 
-            onClick={() => setInterestsModalOpen(false)}
-            sx={{ 
-              mt: 4,
-              backgroundColor: 'white',
-              color: 'black',
-              '&:hover': {
-                backgroundColor: '#d9d9d9'
-              },
-            }}
-          >
+          <Button variant="contained" onClick={() => setInterestsModalOpen(false)} sx={{ mt: 4, backgroundColor: 'white', color: 'black', '&:hover': { backgroundColor: '#d9d9d9' } }}>
             Save Interests
           </Button>
         </Box>
       </Modal>
+
+      {/* Role Menu */}
+      <Menu
+        anchorEl={roleAnchorEl}
+        open={isRoleOpen}
+        onClose={handleRoleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        slotProps={{
+          sx: {
+            bgcolor: '#222',
+            color: 'white',
+            mt: 1,
+          },
+        }}
+      >
+        {PREFER_ROLES.map((role) => (
+          <MenuItem
+            key={role}
+            selected={formData.role === role}
+            onClick={() => handleRoleSelect(role)}
+            sx={{
+              backgroundColor: formData.role === role ? '#444' : 'transparent',
+              '&:hover': {
+                backgroundColor: '#555',
+              },
+            }}
+          >
+            {role}
+          </MenuItem>
+        ))}
+      </Menu>
+
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={6000}
+        onClose={() => setToastOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setToastOpen(false)} 
+          severity={toastSeverity}
+          sx={{ width: '100%' }}
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
