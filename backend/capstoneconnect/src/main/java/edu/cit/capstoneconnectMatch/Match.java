@@ -24,6 +24,9 @@ public class Match {
     @Temporal(TemporalType.TIMESTAMP)
     private Date matchDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date cooldownUntil;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MatchStatus status = MatchStatus.PENDING;
@@ -34,7 +37,8 @@ public class Match {
     public enum MatchStatus {
         PENDING,    // Initial state when connection request is sent
         ACCEPTED,   // When the other user accepts the connection
-        REJECTED    // When the other user rejects the connection
+        REJECTED,   // When the other user rejects the connection
+        PASSED      // When a user passes on a match
     }
 
     // Default constructor
@@ -73,6 +77,14 @@ public class Match {
 
     public void setMatchDate(Date matchDate) {
         this.matchDate = matchDate;
+    }
+
+    public Date getCooldownUntil() {
+        return cooldownUntil;
+    }
+
+    public void setCooldownUntil(Date cooldownUntil) {
+        this.cooldownUntil = cooldownUntil;
     }
 
     public MatchStatus getStatus() {

@@ -983,8 +983,8 @@ export default function MessagesPage() {
               height: '100%'
             }}>
               <Typography variant="h6" color="text.secondary">
-                Select a conversation to start messaging
-              </Typography>
+                Select a conversation to start messaging. Find your Match to collaborate here!
+                </Typography>
             </Box>
           )}
         </Paper>
