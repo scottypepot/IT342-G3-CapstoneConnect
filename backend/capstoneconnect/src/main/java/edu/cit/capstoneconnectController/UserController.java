@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import edu.cit.capstoneconnectEntity.FileAttachment;
 import edu.cit.capstoneconnectRepository.FileAttachmentRepository;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 @RestController
 @CrossOrigin(origins = "${FRONTEND_URL}", allowCredentials = "true")
@@ -146,25 +145,11 @@ public class UserController {
 			// Get all other users
 			List<UserEntity> allUsers = userService.findAll();
 			List<Map<String, Object>> potentialMatches = new ArrayList<>();
-			Date now = new Date();
 
 			for (UserEntity user : allUsers) {
 				// Skip the current user
 				if (user.getId().equals(id)) {
 					continue;
-				}
-
-				// Check for existing match and filter by status/cooldown
-				Optional<Match> matchOpt = userService.findMatchBetweenUsers(id, user.getId());
-				if (matchOpt.isPresent()) {
-					Match match = matchOpt.get();
-					if ((match.getStatus() == Match.MatchStatus.PASSED || match.getStatus() == Match.MatchStatus.REJECTED)
-							&& match.getCooldownUntil() != null && match.getCooldownUntil().after(now)) {
-						continue; // skip due to cooldown
-					}
-					if (match.getStatus() == Match.MatchStatus.ACCEPTED) {
-						continue; // skip accepted
-					}
 				}
 
 				// Calculate match score based on skills and interests
@@ -175,6 +160,7 @@ public class UserController {
 				long matchingSkills = currentUserSkills.stream()
 					.filter(userSkills::contains)
 					.count();
+				
 				long matchingInterests = currentUserInterests.stream()
 					.filter(userInterests::contains)
 					.count();
@@ -208,7 +194,7 @@ public class UserController {
 			}
 
 			// Sort matches by match score in descending order
-			potentialMatches.sort((a, b) ->
+			potentialMatches.sort((a, b) -> 
 				Double.compare((double) b.get("matchScore"), (double) a.get("matchScore")));
 
 			return ResponseEntity.ok(potentialMatches);
@@ -318,18 +304,6 @@ public class UserController {
 			Match.MatchStatus newStatus = Match.MatchStatus.valueOf(statusUpdate.get("status").toUpperCase());
 			match.setStatus(newStatus);
 
-			// Set cooldowns for PASSED and REJECTED
-			Calendar cal = Calendar.getInstance();
-			if (newStatus == Match.MatchStatus.PASSED) {
-				cal.add(Calendar.HOUR, 3);
-				match.setCooldownUntil(cal.getTime());
-			} else if (newStatus == Match.MatchStatus.REJECTED) {
-				cal.add(Calendar.HOUR, 1);
-				match.setCooldownUntil(cal.getTime());
-			} else {
-				match.setCooldownUntil(null);
-			}
-
 			// Get the user who initiated the status change
 			UserEntity actionUser = match.getMatchedUser(); // Default to matchedUser
 			if (statusUpdate.containsKey("userId")) {
@@ -341,12 +315,14 @@ public class UserController {
 
 			// Add appropriate message based on the new status
 			if (newStatus == Match.MatchStatus.REJECTED) {
+				// Create and add the rejection message
 				Message rejectionMessage = new Message(
 					actionUser.getName() + " declined your collaboration request. Wish you luck!",
 					actionUser
 				);
 				match.addMessage(rejectionMessage);
 			} else if (newStatus == Match.MatchStatus.ACCEPTED) {
+				// Create and add the acceptance message
 				Message acceptanceMessage = new Message(
 					"🎉 " + actionUser.getName() + " accepted your collaboration request! You can now start messaging each other.🎉 ",
 					actionUser
