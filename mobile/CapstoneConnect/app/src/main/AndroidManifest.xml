@@ -48,9 +48,9 @@
         <activity
             android:name=".SetupActivity2"
             android:exported="false" />
-        <!--<activity
+        <activity
             android:name=".SetupActivity"
-            android:exported="false" />-->
+            android:exported="false" />
         <activity
             android:name=".NotificationActivity"
             android:exported="false" />
@@ -58,7 +58,7 @@
             android:name=".SignupActivity"
             android:exported="false" /> <!-- Main activity with the launcher intent filter -->
         <activity
-            android:name=".SetupActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

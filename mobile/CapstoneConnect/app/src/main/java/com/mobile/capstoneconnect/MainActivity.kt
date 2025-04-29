@@ -1,43 +1,60 @@
 package com.mobile.capstoneconnect
 
-import android.app.Dialog
-import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+   import android.app.Dialog
+   import android.content.Intent
+   import android.os.Bundle
+   import android.widget.Button
+   import android.widget.EditText
+   import android.widget.ImageView
+   import android.widget.Toast
+   import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+   class MainActivity : AppCompatActivity() {
 
-        // Find the button
-        val btnGetStarted = findViewById<Button>(R.id.btnGetStarted)
+       override fun onCreate(savedInstanceState: Bundle?) {
+           super.onCreate(savedInstanceState)
+           setContentView(R.layout.activity_main)
 
-        // Set click listener
-        btnGetStarted.setOnClickListener {
-            // Show the modal dialog instead of starting a new activity
-            showSignUpModal()
-        }
-    }
+           // Find the button
+           val btnGetStarted = findViewById<Button>(R.id.btnGetStarted)
 
-    private fun showSignUpModal() {
-        // Create a Dialog
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.modal_signup)
+           // Set click listener
+           btnGetStarted.setOnClickListener {
+               // Show the modal dialog instead of starting a new activity
+               showSignUpModal()
+           }
+       }
 
-        // Find elements in the modal layout
-        val btnSignUpMicrosoft = dialog.findViewById<Button>(R.id.btnSignUpMicrosoft)
-        val logoImage = dialog.findViewById<ImageView>(R.id.logoImage)
+       private fun showSignUpModal() {
+           // Create a Dialog
+           val dialog = Dialog(this)
+           dialog.setContentView(R.layout.modal_signup)
 
-        // Handle Microsoft sign up button click
-        btnSignUpMicrosoft.setOnClickListener {
-            // Here you can trigger your Microsoft login functionality
-            // Example: openMicrosoftLogin()
-            dialog.dismiss() // Close modal
-        }
+           // Find elements in the modal layout
+           val editTextUsername = dialog.findViewById<EditText>(R.id.editTextUsername)
+           val editTextPassword = dialog.findViewById<EditText>(R.id.editTextPassword)
+           val btnSignIn = dialog.findViewById<Button>(R.id.btnSignIn)
+           val logoImage = dialog.findViewById<ImageView>(R.id.logoImage)
 
-        // Show the dialog
-        dialog.show()
-    }
-}
+           // Handle sign in button click
+           btnSignIn.setOnClickListener {
+               val username = editTextUsername.text.toString().trim()
+               val password = editTextPassword.text.toString().trim()
+
+               if (username.isEmpty() || password.isEmpty()) {
+                   Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show()
+               } else {
+                   // Here you would validate login credentials with your backend
+                   Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                   dialog.dismiss() // Close modal after success
+
+                   // Start with the notification activity first
+                   val intent = Intent(this, NotificationActivity::class.java)
+                   startActivity(intent)
+               }
+           }
+
+           // Show the dialog
+           dialog.show()
+       }
+   }
