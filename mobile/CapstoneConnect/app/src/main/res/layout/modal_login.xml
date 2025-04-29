@@ -23,7 +23,7 @@
         android:layout_marginTop="4dp"
         android:fontFamily="@font/poppins"
         android:gravity="center"
-        android:text="Register"
+        android:text="Sign In"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,32 +31,18 @@
         app:layout_constraintTop_toBottomOf="@id/logoImage" />
 
     <EditText
-        android:id="@+id/editTextEmail"
+        android:id="@+id/editTextUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@android:color/white"
         android:fontFamily="@font/poppins"
-        android:hint="Email"
+        android:hint="Email or Username"
         android:inputType="textEmailAddress"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/modalTitle" />
-
-    <EditText
-        android:id="@+id/editTextUsername"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/white"
-        android:fontFamily="@font/poppins"
-        android:hint="Username"
-        android:inputType="text"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -73,13 +59,13 @@
         app:layout_constraintTop_toBottomOf="@id/editTextUsername" />
 
     <Button
-        android:id="@+id/btnSignUp"
+        android:id="@+id/btnSignIn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="#4CAF50"
         android:fontFamily="@font/poppins"
-        android:text="Sign Up"
+        android:text="Sign In"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,17 +73,17 @@
         app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
 
     <Button
-        android:id="@+id/btnShowSignIn"
+        android:id="@+id/btnShowSignUp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:backgroundTint="#E0E0E0"
         android:fontFamily="@font/poppins"
-        android:text="Already have an account? Sign In"
+        android:text="Don't have an account? Sign Up"
         android:textColor="#003366"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSignUp"
+        app:layout_constraintTop_toBottomOf="@id/btnSignIn"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

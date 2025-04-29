@@ -1,0 +1,14 @@
+<!-- res/drawable/ic_profile_placeholder.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path
+        android:fillColor="#BDBDBD"
+        android:pathData="M60,60m-30,0a30,30 0 1,0 60,0a30,30 0 1,0 -60,0"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,35a15,15 0 1,1 0,30a15,15 0 1,1 0,-30z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,75c-16.57,0-30,8.06-30,18v7h60v-7c0-9.94-13.43-18-30-18z"/>
+</vector>

@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="FIND YOUR PERFECT CAPSTONE TEAM"
+                android:text="YOU DON'T HAVE ANY MATCHES YET!"
                 android:textAlignment="center"
                 android:textColor="#003366"
                 android:textSize="24sp"
@@ -59,7 +59,7 @@
                 android:id="@+id/homePageDescriptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Swipe, Match, and Collaborate with your schoolmates who share your interest and compliment your skills. Build amazing projects together!"
+                android:text="Keep swiping! Your future capstone teammate is just around the corner."
                 android:textSize="16sp"
                 android:layout_marginTop="1dp"
                 android:textAlignment="center"
@@ -68,139 +68,12 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/homePageFeaturesTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="HOW IT WORKS"
-                android:textColor="#003366"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/homePageSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="Find your dream team in 3 simple steps"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/homePageSubtitleDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins"
-                android:text="CapstoneConnect makes it easy to find teammates with complementary skills and interest"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
-
-            <!-- Step 1 -->
-            <ImageView
-                android:id="@+id/homePageIcon1"
-                android:layout_marginTop="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_icon1" />
-            <TextView
-                android:id="@+id/homePageTitleIcon1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="Create your Account"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-            <TextView
-                android:id="@+id/homePageTextIcon1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins"
-                android:text="Showcase your skills, project interest, goals, and your previous projects"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
-
-            <!-- Step 2 -->
-            <ImageView
-                android:id="@+id/homePageIcon2"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_icon2" />
-            <TextView
-                android:id="@+id/homePageTitleIcon2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="Swipe on potential Teammates"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-            <TextView
-                android:id="@+id/homePageTextIcon2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins"
-                android:text="Browse through profiles and swipe right on students who you’d like to work with"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
-
-            <!-- Step 3 -->
-            <ImageView
-                android:id="@+id/homePageIcon3"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_icon3" />
-            <TextView
-                android:id="@+id/homePageTitleIcon3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="Connect and Collaborate"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-            <TextView
-                android:id="@+id/homePageTextIcon3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins"
-                android:text="When there’s a mutual match, start chatting and planning your capstone project"
-                android:textAlignment="center"
-                android:textSize="12sp" />
-
-            <TextView
                 android:id="@+id/homePageFooterText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="© 2025 CapstoneConnect. All rights reserved."
                 android:textSize="12sp"
-                android:layout_marginTop="90dp"
+                android:layout_marginTop="100dp"
                 android:textAlignment="center"
                 android:fontFamily="@font/poppins"
                 android:textColor="#B0B0B0"
