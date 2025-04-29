@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SetupActivity6">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/setupPage6ScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:padding="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/setupPage6ButtonContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingBottom="20dp">
+
+            <!-- Logo -->
+            <FrameLayout
+                android:id="@+id/setupPage6LogoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#EEECEC">
+
+                <ImageView
+                    android:id="@+id/setupPage6LogoImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="App Logo"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_logo"
+                    tools:ignore="HardcodedText" />
+            </FrameLayout>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/setupPage6WelcomeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Here's your info!"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- Display Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/setupPage6DisplayCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                app:cardElevation="8dp"
+                app:cardCornerRadius="16dp"
+                android:padding="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <!-- Name -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Your Name"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginTop="20dp" />
+
+                    <TextView
+                        android:id="@+id/setupPage6DisplayName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginBottom="16dp"
+                        android:textColor="#333333" />
+
+                    <!-- Role -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Preferred Role"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/setupPage6DisplayRole"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginBottom="16dp"
+                        android:textColor="#333333" />
+
+                    <!-- About -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="About You"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/setupPage6DisplayAbout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginBottom="16dp"
+                        android:textColor="#333333" />
+
+                    <!-- Skills -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Skills"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/setupPage6DisplaySkills"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins"
+                        android:textColor="#333333"
+                        android:paddingBottom="15dp"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Buttons -->
+    <LinearLayout
+        android:id="@+id/setupPage6ButtonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/setupPage6BackButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:backgroundTint="#0C4278"
+            android:fontFamily="@font/poppins" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/setupPage6NextButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:backgroundTint="#0C4278"
+            android:fontFamily="@font/poppins" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

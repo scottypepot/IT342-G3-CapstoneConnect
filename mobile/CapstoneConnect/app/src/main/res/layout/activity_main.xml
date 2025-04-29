@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- ScrollView for scrollable content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:padding="20dp">
+
+        <!-- LinearLayout to hold content inside ScrollView -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingBottom="20dp">
+
+            <!-- Header Section -->
+
+            <!-- Title Section -->
+
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#EEECEC">
+
+                 <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="App Logo"
+                    android:rotation="0"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_logo"
+                     tools:ignore="HardcodedText" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="FIND YOUR PERFECT CAPSTONE TEAM"
+                android:textAlignment="center"
+                android:textColor="#003366"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <!-- Short Description Section -->
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Swipe, Match, and Collaborate with your schoolmates who share your interest and compliment your skills. Build amazing projects together!"
+                android:textSize="16sp"
+                android:layout_marginTop="1dp"
+                android:textAlignment="center"
+                android:fontFamily="@font/poppins"
+                android:layout_marginHorizontal="30dp"
+                tools:ignore="HardcodedText" />
+
+            <!-- Features Section -->
+
+            <Button
+                android:id="@+id/btnGetStarted"
+                android:layout_width="150dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#4CAF50"
+                android:fontFamily="@font/poppins"
+                android:text="Sign Up"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/featuresTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="HOW IT WORKS"
+                android:textColor="#003366"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <!-- How it Works -->
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Find your dream team in 3 simple steps"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/subtitledescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins"
+                android:text="CapstoneConnect makes it easy to find teammates with complementary skills and interest"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+
+            <!-- First Icon Section -->
+            <ImageView
+                android:layout_marginTop="30dp"
+                android:id="@+id/icon1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_icon1" />
+            <TextView
+                android:id="@+id/titleicon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Create your Account"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/texticon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins"
+                android:text="Show case your skills, project interest, goals, and your previous projects"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText" />
+
+            <!-- Second Icon Section -->
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:id="@+id/icon2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_icon2" />
+            <TextView
+                android:id="@+id/titleicon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Swipe on potential Teammates"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/texticon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins"
+                android:text="Browse through profiles and swipe right on students who you’d like to work with"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText" />
+
+            <!-- Third Icon Section -->
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:id="@+id/icon3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_icon3" />
+            <TextView
+                android:id="@+id/titleicon3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Connect and Collaborate"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/texticon3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/poppins"
+                android:text="When there’s a mutual match, start chatting and planning your capstone project"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+
+
+
+
+            <!-- Footer Section -->
+            <TextView
+                android:id="@+id/footerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="© 2025 CapstoneConnect. All rights reserved."
+                android:textSize="12sp"
+                android:layout_marginTop="90dp"
+                android:textAlignment="center"
+                android:fontFamily="@font/poppins"
+                android:textColor="#B0B0B0"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
