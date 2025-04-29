@@ -1,60 +1,66 @@
 package com.mobile.capstoneconnect
 
-   import android.app.Dialog
-   import android.content.Intent
-   import android.os.Bundle
-   import android.widget.Button
-   import android.widget.EditText
-   import android.widget.ImageView
-   import android.widget.Toast
-   import androidx.appcompat.app.AppCompatActivity
+import android.app.Dialog
+import android.content.Intent
+import android.os.Bundle
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 
-   class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
-       override fun onCreate(savedInstanceState: Bundle?) {
-           super.onCreate(savedInstanceState)
-           setContentView(R.layout.activity_main)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-           // Find the button
-           val btnGetStarted = findViewById<Button>(R.id.btnGetStarted)
+        val btnGetStarted = findViewById<Button>(R.id.btnGetStarted)
+        btnGetStarted.setOnClickListener {
+            showSignUpModal()
+        }
+    }
 
-           // Set click listener
-           btnGetStarted.setOnClickListener {
-               // Show the modal dialog instead of starting a new activity
-               showSignUpModal()
-           }
-       }
+    private fun showSignUpModal() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.modal_signup)
 
-       private fun showSignUpModal() {
-           // Create a Dialog
-           val dialog = Dialog(this)
-           dialog.setContentView(R.layout.modal_signup)
+        val btnSignUp = dialog.findViewById<Button>(R.id.btnSignUp)
+        val btnShowSignIn = dialog.findViewById<Button>(R.id.btnShowSignIn)
 
-           // Find elements in the modal layout
-           val editTextUsername = dialog.findViewById<EditText>(R.id.editTextUsername)
-           val editTextPassword = dialog.findViewById<EditText>(R.id.editTextPassword)
-           val btnSignIn = dialog.findViewById<Button>(R.id.btnSignIn)
-           val logoImage = dialog.findViewById<ImageView>(R.id.logoImage)
+        btnSignUp.setOnClickListener {
+            // Registration logic here (add backend later)
+            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+            showLoginModal() // Automatically show login modal after registration
+        }
 
-           // Handle sign in button click
-           btnSignIn.setOnClickListener {
-               val username = editTextUsername.text.toString().trim()
-               val password = editTextPassword.text.toString().trim()
+        btnShowSignIn.setOnClickListener {
+            dialog.dismiss()
+            showLoginModal()
+        }
 
-               if (username.isEmpty() || password.isEmpty()) {
-                   Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show()
-               } else {
-                   // Here you would validate login credentials with your backend
-                   Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                   dialog.dismiss() // Close modal after success
+        dialog.show()
+    }
 
-                   // Start with the notification activity first
-                   val intent = Intent(this, NotificationActivity::class.java)
-                   startActivity(intent)
-               }
-           }
+    private fun showLoginModal() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.modal_login)
 
-           // Show the dialog
-           dialog.show()
-       }
-   }
+        val btnSignIn = dialog.findViewById<Button>(R.id.btnSignIn)
+        val btnShowSignUp = dialog.findViewById<Button>(R.id.btnShowSignUp)
+
+        btnSignIn.setOnClickListener {
+            // Login logic here (add backend later)
+            Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+            // Redirect to notification page
+            startActivity(Intent(this, NotificationActivity::class.java))
+            finish()
+        }
+
+        btnShowSignUp.setOnClickListener {
+            dialog.dismiss()
+            showSignUpModal()
+        }
+
+        dialog.show()
+    }
+}
