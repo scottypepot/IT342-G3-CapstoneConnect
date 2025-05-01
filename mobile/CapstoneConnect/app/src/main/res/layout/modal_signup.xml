@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#F5EEEE"
-    android:padding="20dp">
+    android:padding="20dp"
+    tools:context=".MainActivity">
 
+    <!-- Logo -->
     <ImageView
         android:id="@+id/logoImage"
         android:layout_width="240dp"
@@ -14,8 +17,10 @@
         android:src="@drawable/ic_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
+    <!-- Title -->
     <TextView
         android:id="@+id/modalTitle"
         android:layout_width="wrap_content"
@@ -23,81 +28,66 @@
         android:layout_marginTop="4dp"
         android:fontFamily="@font/poppins"
         android:gravity="center"
-        android:text="Register"
+        android:text="Sign Up for an Account"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logoImage" />
+        app:layout_constraintTop_toBottomOf="@id/logoImage"
+        tools:ignore="HardcodedText" />
 
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/white"
-        android:fontFamily="@font/poppins"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/modalTitle" />
-
-    <EditText
-        android:id="@+id/editTextUsername"
+    <!-- Status Text -->
+    <TextView
+        android:id="@+id/modalStatusText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@android:color/white"
         android:fontFamily="@font/poppins"
-        android:hint="Username"
-        android:inputType="text"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:text=""
+        android:textColor="#333333"
+        android:textSize="13sp"
+        app:layout_constraintTop_toBottomOf="@id/modalTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/white"
-        android:fontFamily="@font/poppins"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextUsername" />
-
+    <!-- Sign Up Button -->
     <Button
-        android:id="@+id/btnSignUp"
+        android:id="@+id/btnSignUpMicrosoft"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#4CAF50"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#FFFFFF"
         android:fontFamily="@font/poppins"
-        android:text="Sign Up"
-        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:text="Sign in with Microsoft"
+        android:textColor="@color/black"
+        android:textSize="11sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:icon="@drawable/ic_microsoft_logo"
+        app:iconPadding="6dp"
+        app:iconTintMode="multiply"
+        app:layout_constraintTop_toBottomOf="@id/modalStatusText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
 
+    <!-- Sign Out Button -->
     <Button
-        android:id="@+id/btnShowSignIn"
+        android:id="@+id/btnSignOutMicrosoft"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:backgroundTint="#E0E0E0"
+        android:backgroundTint="#FFFFFF"
         android:fontFamily="@font/poppins"
-        android:text="Already have an account? Sign In"
-        android:textColor="#003366"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:text="Sign out"
+        android:textColor="@color/black"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/btnSignUpMicrosoft"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSignUp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

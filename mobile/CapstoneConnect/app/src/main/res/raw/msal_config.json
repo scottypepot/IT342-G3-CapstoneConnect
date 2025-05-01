@@ -1,0 +1,13 @@
+{
+  "client_id": "f90a54c4-e0a4-4ca0-bb55-e10ac76c1a21",
+  "authorization_user_agent": "DEFAULT",
+  "redirect_uri": "msauth://com.mobile.capstoneconnect/2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D",
+  "account_mode": "SINGLE",
+  "broker_redirect_uri_registered": false,
+  "authorities": [
+    {
+      "type": "AAD",
+      "authority_url": "https://login.microsoftonline.com/organizations"
+    }
+  ]
+}

@@ -1,18 +1,26 @@
 package com.mobile.capstoneconnect
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.microsoft.identity.client.AuthenticationCallback
+import com.microsoft.identity.client.IAuthenticationResult
+import com.microsoft.identity.client.exception.MsalException
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var btnGetStarted: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnGetStarted = findViewById<Button>(R.id.btnGetStarted)
+        btnGetStarted = findViewById(R.id.btnGetStarted)
+
+        // Initialize MSAL (no statusText update)
+        AuthManager.init(applicationContext) { _, _ -> }
+
         btnGetStarted.setOnClickListener {
             showSignUpModal()
         }
@@ -22,43 +30,38 @@ class MainActivity : AppCompatActivity() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.modal_signup)
 
-        val btnSignUp = dialog.findViewById<Button>(R.id.btnSignUp)
-        val btnShowSignIn = dialog.findViewById<Button>(R.id.btnShowSignIn)
+        val btnSignUpMicrosoft = dialog.findViewById<Button>(R.id.btnSignUpMicrosoft)
+        val btnSignOutMicrosoft = dialog.findViewById<Button>(R.id.btnSignOutMicrosoft)
+        val modalStatusText = dialog.findViewById<TextView>(R.id.modalStatusText)
 
-        btnSignUp.setOnClickListener {
-            // Registration logic here (add backend later)
-            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
-            showLoginModal() // Automatically show login modal after registration
+        btnSignUpMicrosoft.setOnClickListener {
+            AuthManager.signIn(this, object : AuthenticationCallback {
+                override fun onSuccess(result: IAuthenticationResult) {
+                    runOnUiThread {
+                        modalStatusText.text = "Hello, ${result.account.username}"
+                    }
+                }
+
+                override fun onError(exception: MsalException) {
+                    runOnUiThread {
+                        modalStatusText.text = "Auth failed: ${exception.message}"
+                    }
+                }
+
+                override fun onCancel() {
+                    runOnUiThread {
+                        modalStatusText.text = "User cancelled sign-in."
+                    }
+                }
+            })
         }
 
-        btnShowSignIn.setOnClickListener {
-            dialog.dismiss()
-            showLoginModal()
-        }
-
-        dialog.show()
-    }
-
-    private fun showLoginModal() {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.modal_login)
-
-        val btnSignIn = dialog.findViewById<Button>(R.id.btnSignIn)
-        val btnShowSignUp = dialog.findViewById<Button>(R.id.btnShowSignUp)
-
-        btnSignIn.setOnClickListener {
-            // Login logic here (add backend later)
-            Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
-            // Redirect to notification page
-            startActivity(Intent(this, NotificationActivity::class.java))
-            finish()
-        }
-
-        btnShowSignUp.setOnClickListener {
-            dialog.dismiss()
-            showSignUpModal()
+        btnSignOutMicrosoft.setOnClickListener {
+            AuthManager.signOut { success, error ->
+                runOnUiThread {
+                    modalStatusText.text = if (success) "Signed out successfully" else "Sign-out failed: $error"
+                }
+            }
         }
 
         dialog.show()
