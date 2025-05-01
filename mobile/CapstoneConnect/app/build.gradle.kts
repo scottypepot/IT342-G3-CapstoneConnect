@@ -14,6 +14,10 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        // MSAL needs these redirect URIs registered in Azure portal
+        manifestPlaceholders += mapOf(
+            "msalRedirectUri" to "msauth://com.example.test/2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D"
+        )
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -37,6 +41,8 @@ android {
 
 dependencies {
 
+    // MSAL for Android
+    implementation("com.microsoft.identity.client:msal:6.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
