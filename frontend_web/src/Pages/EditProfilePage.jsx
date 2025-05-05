@@ -203,19 +203,22 @@ export default function EditProfilePage() {
         return;
       }
 
+      // Create the request body with proper formatting
+      const requestBody = {
+        fullName: formData.fullName || '',
+        role: formData.role || '',
+        about: formData.about || '',
+        skills: Array.isArray(skills) ? skills : [],
+        interests: Array.isArray(interests) ? interests : [],
+        githubLink: formData.github || '',
+        profilePicture: uploadedAvatarUrl || avatar || ''
+      };
+
       const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          role: formData.role,
-          about: formData.about,
-          skills,
-          interests,
-          githubLink: formData.github,
-          profilePicture: uploadedAvatarUrl || avatar,
-        }),
+        body: JSON.stringify(requestBody)
       });
 
       if (response.ok) {

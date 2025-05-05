@@ -12,12 +12,11 @@ import Acad from '../assets/acad.png';
 import { Helmet } from 'react-helmet';
 import SignUpModal from './SignUpModal';
 import LogInModal from './LogInModal';
+import { useNavigate } from 'react-router-dom';
+import { getAuthenticatedUser } from "./authService"; 
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { getAuthenticatedUser } from "./authService"; 
-
-
 
 const developers = [
   {
@@ -64,22 +63,25 @@ const scrollToHome = () => {
 
 export default function LandingPage() {
   const [modalType, setModalType] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthentication = async () => {
         const user = await getAuthenticatedUser();
-
         if (user) {
-            if (user.firstTimeUser) {
-                window.location.href = "/home";
-            } else {
-                window.location.href = "/profile";
-            }
+            navigate('/home');
         }
     };
 
-    checkAuthentication();
-}, []);
+    // Check for post-logout redirect
+    const postLogoutRedirect = sessionStorage.getItem("postLogoutRedirect");
+    if (postLogoutRedirect) {
+        sessionStorage.removeItem("postLogoutRedirect");
+        window.location.href = postLogoutRedirect;
+    } else {
+        checkAuthentication();
+    }
+  }, [navigate]);
 
   const handleOpenModal = (type) => setModalType(type);
   const handleCloseModal = () => setModalType(null);
@@ -247,7 +249,7 @@ export default function LandingPage() {
               <img src={Swipe} alt="swiping"/>
                 <Typography variant="h4" fontWeight="bold" fontSize={30} marginTop={2}>Swipe to Connect</Typography>
                 <Typography variant="body2" fontSize={18} fontWeight="100" marginTop={2}>
-                Browse through profiles and swipe right on students who you’d like to work with
+                Browse through profiles and swipe right on students who you'd like to work with
                 </Typography>
               </CardContent>
           </div>
@@ -258,7 +260,7 @@ export default function LandingPage() {
               <img src={Communicate} alt="comms"/>
                 <Typography variant="h4" fontWeight="bold" fontSize={30} marginTop={2}>Connect & Collaborate</Typography>
                 <Typography variant="body2" fontSize={18} fontWeight="100" marginTop={2}>
-                  When there’s a mutual match, start chatting and planning your capstone project
+                  When there's a mutual match, start chatting and planning your capstone project
                 </Typography>
               </CardContent>
           </div>
