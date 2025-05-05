@@ -42,6 +42,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
+      // First, call our backend logout endpoint
       const response = await fetch(`${API_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
@@ -50,14 +51,16 @@ const Navbar = () => {
       // Clear all browser data regardless of response
       clearAllBrowserData();
 
-      // Get the Microsoft tenant ID and client ID from your configuration
-      const tenantId = "common"; // or your specific tenant ID
+      // Get the Microsoft client ID from environment variables
       const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID;
       
       // Construct the OIDC logout URL with all necessary parameters
       const logoutUrl = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/logout");
       logoutUrl.searchParams.append("post_logout_redirect_uri", FRONTEND_URL);
       logoutUrl.searchParams.append("client_id", clientId);
+      
+      // Store the landing page URL in sessionStorage before redirecting
+      sessionStorage.setItem("postLogoutRedirect", FRONTEND_URL);
       
       // Redirect to Microsoft logout
       window.location.href = logoutUrl.toString();
