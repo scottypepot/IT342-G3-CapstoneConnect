@@ -67,9 +67,20 @@ export default function LandingPage() {
 
   useEffect(() => {
     const checkAuthentication = async () => {
-        const user = await getAuthenticatedUser();
-        if (user) {
-            navigate('/home');
+        try {
+            const response = await fetch(`${API_URL}/api/auth/user`, {
+                credentials: "include"
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                // Only navigate if we're not already on the home page
+                if (window.location.pathname === '/') {
+                    navigate('/home');
+                }
+            }
+        } catch (error) {
+            console.error("Authentication check failed:", error);
         }
     };
 

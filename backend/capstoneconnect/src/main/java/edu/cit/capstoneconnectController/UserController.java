@@ -116,8 +116,13 @@ public class UserController {
                 String profilePicturePath = user.getProfilePicture();
                 if (profilePicturePath == null || profilePicturePath.isEmpty()) {
                     profilePicturePath = "/uploads/default-avatar.png";
-                } else if (!profilePicturePath.startsWith("http")) {
-                    profilePicturePath = System.getenv("BACKEND_URL") + profilePicturePath;
+                }
+                // Always prepend the backend URL if it's not already a full URL
+                if (!profilePicturePath.startsWith("http")) {
+                    String backendUrl = System.getenv("BACKEND_URL");
+                    if (backendUrl != null && !backendUrl.isEmpty()) {
+                        profilePicturePath = backendUrl + profilePicturePath;
+                    }
                 }
                 profileData.put("profilePicture", profilePicturePath);
 
@@ -495,8 +500,16 @@ public class UserController {
             @PathVariable String fileName,
             @RequestParam(required = false) boolean view) {
         try {
-            Path projectRoot = Paths.get(System.getProperty("user.dir"));
-            Path filePath = projectRoot.resolve("uploads").resolve(fileName);
+            // Use persistent storage path in Render, fallback to local path for development
+            String persistentPath = System.getenv("RENDER_PERSISTENT_DISK_PATH");
+            Path uploadsDir;
+            if (persistentPath != null && !persistentPath.isEmpty()) {
+                uploadsDir = Paths.get(persistentPath, "uploads");
+            } else {
+                uploadsDir = Paths.get(System.getProperty("user.dir"), "uploads");
+            }
+            
+            Path filePath = uploadsDir.resolve(fileName);
             
             // Log the file path for debugging
             System.out.println("Attempting to serve file from: " + filePath.toAbsolutePath());
@@ -506,21 +519,38 @@ public class UserController {
             if (resource.exists() && resource.isReadable()) {
                 // Determine content type
                 String contentType = Files.probeContentType(filePath);
-                boolean isImage = contentType != null && contentType.startsWith("image/");
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+                boolean isImage = contentType.startsWith("image/");
 
                 if (view && isImage) {
                     // For images when viewing, send with content-type for browser display
                     return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_TYPE, contentType)
+                        .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
                         .body(resource);
                 } else {
                     // For downloads or non-images, send as attachment
                     return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_TYPE, contentType)
+                        .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
                         .body(resource);
                 }
             } else {
                 System.err.println("File not found or not readable: " + filePath.toAbsolutePath());
+                // Return a default avatar if the requested file is not found
+                Path defaultAvatarPath = uploadsDir.resolve("default-avatar.png");
+                Resource defaultResource = new UrlResource(defaultAvatarPath.toUri());
+                
+                if (defaultResource.exists() && defaultResource.isReadable()) {
+                    return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, "image/png")
+                        .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
+                        .body(defaultResource);
+                }
+                
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(null);
             }
