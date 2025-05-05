@@ -158,12 +158,20 @@ public class UserController {
                 Optional<Match> matchOpt = userService.findMatchBetweenUsers(id, user.getId());
                 if (matchOpt.isPresent()) {
                     Match match = matchOpt.get();
-                    if ((match.getStatus() == Match.MatchStatus.PASSED || match.getStatus() == Match.MatchStatus.REJECTED)
-                            && match.getCooldownUntil() != null && match.getCooldownUntil().after(now)) {
-                        continue; // skip due to cooldown
-                    }
+                    
+                    // Skip if match is accepted (permanent hide)
                     if (match.getStatus() == Match.MatchStatus.ACCEPTED) {
-                        continue; // skip accepted
+                        continue;
+                    }
+                    
+                    // Skip if there's an active cooldown
+                    if (match.getCooldownUntil() != null && match.getCooldownUntil().after(now)) {
+                        continue;
+                    }
+                    
+                    // Skip if there's a pending request (waiting for decision)
+                    if (match.getStatus() == Match.MatchStatus.PENDING) {
+                        continue;
                     }
                 }
 
@@ -199,7 +207,7 @@ public class UserController {
                     if (profilePicturePath == null || profilePicturePath.isEmpty()) {
                         profilePicturePath = "/uploads/default-avatar.png";
                     } else if (!profilePicturePath.startsWith("http")) {
-                        profilePicturePath = "http://localhost:8080" + profilePicturePath;
+                        profilePicturePath = System.getenv("BACKEND_URL") + profilePicturePath;
                     }
                     matchData.put("profilePicture", profilePicturePath);
 
@@ -318,16 +326,27 @@ public class UserController {
             Match.MatchStatus newStatus = Match.MatchStatus.valueOf(statusUpdate.get("status").toUpperCase());
             match.setStatus(newStatus);
 
-            // Set cooldowns for PASSED and REJECTED
+            // Set cooldowns based on the new status
             Calendar cal = Calendar.getInstance();
-            if (newStatus == Match.MatchStatus.PASSED) {
-                cal.add(Calendar.HOUR, 3);
-                match.setCooldownUntil(cal.getTime());
-            } else if (newStatus == Match.MatchStatus.REJECTED) {
-                cal.add(Calendar.HOUR, 1);
-                match.setCooldownUntil(cal.getTime());
-            } else {
-                match.setCooldownUntil(null);
+            switch (newStatus) {
+                case PASSED:
+                    // 3-hour cooldown for passed matches
+                    cal.add(Calendar.HOUR, 3);
+                    match.setCooldownUntil(cal.getTime());
+                    break;
+                case REJECTED:
+                    // 1-hour cooldown for rejected matches
+                    cal.add(Calendar.HOUR, 1);
+                    match.setCooldownUntil(cal.getTime());
+                    break;
+                case ACCEPTED:
+                    // No cooldown for accepted matches (permanent hide)
+                    match.setCooldownUntil(null);
+                    break;
+                case PENDING:
+                    // No cooldown for pending matches (will be hidden until decision)
+                    match.setCooldownUntil(null);
+                    break;
             }
 
             // Get the user who initiated the status change
@@ -478,9 +497,13 @@ public class UserController {
         try {
             Path projectRoot = Paths.get(System.getProperty("user.dir"));
             Path filePath = projectRoot.resolve("uploads").resolve(fileName);
+            
+            // Log the file path for debugging
+            System.out.println("Attempting to serve file from: " + filePath.toAbsolutePath());
+            
             Resource resource = new UrlResource(filePath.toUri());
 
-            if (resource.exists() || resource.isReadable()) {
+            if (resource.exists() && resource.isReadable()) {
                 // Determine content type
                 String contentType = Files.probeContentType(filePath);
                 boolean isImage = contentType != null && contentType.startsWith("image/");
@@ -497,11 +520,15 @@ public class UserController {
                         .body(resource);
                 }
             } else {
-                throw new RuntimeException("Could not read the file!");
+                System.err.println("File not found or not readable: " + filePath.toAbsolutePath());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(null);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Print the full stack trace
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            System.err.println("Error serving file: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(null);
         }
     }
     @PostMapping("/api/matches/{matchId}/attachments")
