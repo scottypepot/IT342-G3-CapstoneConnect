@@ -35,6 +35,8 @@ import edu.cit.capstoneconnectEntity.FileAttachment;
 import edu.cit.capstoneconnectRepository.FileAttachmentRepository;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @CrossOrigin(origins = "${FRONTEND_URL}", allowCredentials = "true")
@@ -75,8 +77,51 @@ public class UserController {
                 user.setName((String) updates.get("fullName"));
                 user.setRole((String) updates.get("role"));
                 user.setAbout((String) updates.get("about"));
-                user.setSkills((List<String>) updates.get("skills"));
-                user.setInterests((List<String>) updates.get("interests"));
+                
+                // Handle skills list
+                Object skillsObj = updates.get("skills");
+                if (skillsObj instanceof List) {
+                    user.setSkills((List<String>) skillsObj);
+                } else if (skillsObj != null) {
+                    // If it's not a List, try to convert it
+                    List<String> skillsList = new ArrayList<>();
+                    if (skillsObj instanceof String) {
+                        // If it's a string, try to parse it as JSON array
+                        try {
+                            ObjectMapper mapper = new ObjectMapper();
+                            skillsList = mapper.readValue((String) skillsObj, new TypeReference<List<String>>() {});
+                        } catch (Exception e) {
+                            // If parsing fails, add as single item
+                            skillsList.add((String) skillsObj);
+                        }
+                    }
+                    user.setSkills(skillsList);
+                } else {
+                    user.setSkills(new ArrayList<>());
+                }
+
+                // Handle interests list
+                Object interestsObj = updates.get("interests");
+                if (interestsObj instanceof List) {
+                    user.setInterests((List<String>) interestsObj);
+                } else if (interestsObj != null) {
+                    // If it's not a List, try to convert it
+                    List<String> interestsList = new ArrayList<>();
+                    if (interestsObj instanceof String) {
+                        // If it's a string, try to parse it as JSON array
+                        try {
+                            ObjectMapper mapper = new ObjectMapper();
+                            interestsList = mapper.readValue((String) interestsObj, new TypeReference<List<String>>() {});
+                        } catch (Exception e) {
+                            // If parsing fails, add as single item
+                            interestsList.add((String) interestsObj);
+                        }
+                    }
+                    user.setInterests(interestsList);
+                } else {
+                    user.setInterests(new ArrayList<>());
+                }
+
                 user.setGithubLink((String) updates.get("githubLink"));
 
                 // Update profile picture - handle null/empty case
@@ -95,7 +140,8 @@ public class UserController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An error occurred: " + e.getMessage());
         }
     }
     @GetMapping("/api/users/{id}/profile")
