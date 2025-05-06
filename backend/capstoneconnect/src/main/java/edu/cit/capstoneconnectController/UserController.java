@@ -35,6 +35,8 @@ import edu.cit.capstoneconnectEntity.FileAttachment;
 import edu.cit.capstoneconnectRepository.FileAttachmentRepository;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @CrossOrigin(origins = "${FRONTEND_URL}", allowCredentials = "true")
@@ -75,8 +77,51 @@ public class UserController {
                 user.setName((String) updates.get("fullName"));
                 user.setRole((String) updates.get("role"));
                 user.setAbout((String) updates.get("about"));
-                user.setSkills((List<String>) updates.get("skills"));
-                user.setInterests((List<String>) updates.get("interests"));
+                
+                // Handle skills list
+                Object skillsObj = updates.get("skills");
+                if (skillsObj instanceof List) {
+                    user.setSkills((List<String>) skillsObj);
+                } else if (skillsObj != null) {
+                    // If it's not a List, try to convert it
+                    List<String> skillsList = new ArrayList<>();
+                    if (skillsObj instanceof String) {
+                        // If it's a string, try to parse it as JSON array
+                        try {
+                            ObjectMapper mapper = new ObjectMapper();
+                            skillsList = mapper.readValue((String) skillsObj, new TypeReference<List<String>>() {});
+                        } catch (Exception e) {
+                            // If parsing fails, add as single item
+                            skillsList.add((String) skillsObj);
+                        }
+                    }
+                    user.setSkills(skillsList);
+                } else {
+                    user.setSkills(new ArrayList<>());
+                }
+
+                // Handle interests list
+                Object interestsObj = updates.get("interests");
+                if (interestsObj instanceof List) {
+                    user.setInterests((List<String>) interestsObj);
+                } else if (interestsObj != null) {
+                    // If it's not a List, try to convert it
+                    List<String> interestsList = new ArrayList<>();
+                    if (interestsObj instanceof String) {
+                        // If it's a string, try to parse it as JSON array
+                        try {
+                            ObjectMapper mapper = new ObjectMapper();
+                            interestsList = mapper.readValue((String) interestsObj, new TypeReference<List<String>>() {});
+                        } catch (Exception e) {
+                            // If parsing fails, add as single item
+                            interestsList.add((String) interestsObj);
+                        }
+                    }
+                    user.setInterests(interestsList);
+                } else {
+                    user.setInterests(new ArrayList<>());
+                }
+
                 user.setGithubLink((String) updates.get("githubLink"));
 
                 // Update profile picture - handle null/empty case
@@ -95,7 +140,8 @@ public class UserController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An error occurred: " + e.getMessage());
         }
     }
     @GetMapping("/api/users/{id}/profile")
@@ -116,8 +162,13 @@ public class UserController {
                 String profilePicturePath = user.getProfilePicture();
                 if (profilePicturePath == null || profilePicturePath.isEmpty()) {
                     profilePicturePath = "/uploads/default-avatar.png";
-                } else if (!profilePicturePath.startsWith("http")) {
-                    profilePicturePath = System.getenv("BACKEND_URL") + profilePicturePath;
+                }
+                // Always prepend the backend URL if it's not already a full URL
+                if (!profilePicturePath.startsWith("http")) {
+                    String backendUrl = System.getenv("BACKEND_URL");
+                    if (backendUrl != null && !backendUrl.isEmpty()) {
+                        profilePicturePath = backendUrl + profilePicturePath;
+                    }
                 }
                 profileData.put("profilePicture", profilePicturePath);
 
@@ -495,8 +546,16 @@ public class UserController {
             @PathVariable String fileName,
             @RequestParam(required = false) boolean view) {
         try {
-            Path projectRoot = Paths.get(System.getProperty("user.dir"));
-            Path filePath = projectRoot.resolve("uploads").resolve(fileName);
+            // Use persistent storage path in Render, fallback to local path for development
+            String persistentPath = System.getenv("RENDER_PERSISTENT_DISK_PATH");
+            Path uploadsDir;
+            if (persistentPath != null && !persistentPath.isEmpty()) {
+                uploadsDir = Paths.get(persistentPath, "uploads");
+            } else {
+                uploadsDir = Paths.get(System.getProperty("user.dir"), "uploads");
+            }
+            
+            Path filePath = uploadsDir.resolve(fileName);
             
             // Log the file path for debugging
             System.out.println("Attempting to serve file from: " + filePath.toAbsolutePath());
@@ -506,21 +565,38 @@ public class UserController {
             if (resource.exists() && resource.isReadable()) {
                 // Determine content type
                 String contentType = Files.probeContentType(filePath);
-                boolean isImage = contentType != null && contentType.startsWith("image/");
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+                boolean isImage = contentType.startsWith("image/");
 
                 if (view && isImage) {
                     // For images when viewing, send with content-type for browser display
                     return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_TYPE, contentType)
+                        .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
                         .body(resource);
                 } else {
                     // For downloads or non-images, send as attachment
                     return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_TYPE, contentType)
+                        .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
                         .body(resource);
                 }
             } else {
                 System.err.println("File not found or not readable: " + filePath.toAbsolutePath());
+                // Return a default avatar if the requested file is not found
+                Path defaultAvatarPath = uploadsDir.resolve("default-avatar.png");
+                Resource defaultResource = new UrlResource(defaultAvatarPath.toUri());
+                
+                if (defaultResource.exists() && defaultResource.isReadable()) {
+                    return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, "image/png")
+                        .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
+                        .body(defaultResource);
+                }
+                
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(null);
             }

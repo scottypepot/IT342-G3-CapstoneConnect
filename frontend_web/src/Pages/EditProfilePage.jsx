@@ -214,9 +214,14 @@ export default function EditProfilePage() {
         profilePicture: uploadedAvatarUrl || avatar || ''
       };
 
+      console.log('Sending request body:', requestBody); // Debug log
+
       const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         credentials: "include",
         body: JSON.stringify(requestBody)
       });
@@ -228,8 +233,9 @@ export default function EditProfilePage() {
         setToastOpen(true);
         setTimeout(() => navigate('/profile'), 1200);
       } else {
-        const errorData = await response.json();
-        setToastMessage(errorData.message || 'Failed to update profile. Please try again.');
+        const errorData = await response.text();
+        console.error('Server response:', errorData); // Debug log
+        setToastMessage('Failed to update profile. Please try again.');
         setToastSeverity('error');
         setToastOpen(true);
       }

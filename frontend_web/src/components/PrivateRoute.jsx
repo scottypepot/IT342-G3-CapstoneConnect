@@ -18,14 +18,21 @@ const PrivateRoute = ({ children }) => {
 
       if (response.ok) {
         const userData = await response.json();
-        sessionStorage.setItem('userId', userData.id);
+        // Store user data in sessionStorage only if it's not already there
+        if (!sessionStorage.getItem('userId')) {
+          sessionStorage.setItem('userId', userData.id);
+        }
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
+        // Clear any existing session data
+        sessionStorage.clear();
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
       setIsAuthenticated(false);
+      // Clear any existing session data
+      sessionStorage.clear();
     }
   };
 
