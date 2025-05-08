@@ -104,6 +104,14 @@ useEffect(() => {
   }
 }, []); // Empty dependency array ensures this runs only once
 
+  // Helper to resolve avatar URL
+  const resolveAvatarUrl = (url) => {
+    if (!url) return "/uploads/default-avatar.png";
+    // If already absolute URL, return as is
+    if (url.startsWith("http")) return url;
+    // Otherwise, prepend backend API URL
+    return `${API_URL}${url}`;
+  };
 
   return (
     <>
@@ -172,7 +180,7 @@ useEffect(() => {
                     }}
                   >
                     <img
-                      src={avatar}
+                      src={resolveAvatarUrl(avatar)}
                       className="profile-image"
                       alt="Profile"
                       style={{
@@ -180,6 +188,7 @@ useEffect(() => {
                         height: '100%',
                         objectFit: 'cover',
                       }}
+                      onError={e => { e.target.onerror = null; e.target.src = resolveAvatarUrl("/uploads/default-avatar.png"); }}
                     />
                     <Box
                       sx={{

@@ -144,6 +144,13 @@ export default function EditProfilePage() {
     fetchUserData();
   }, []);
 
+  // Helper to resolve avatar URL
+  const resolveAvatarUrl = (url) => {
+    if (!url) return "/uploads/default-avatar.png";
+    if (url.startsWith("http")) return url;
+    return `${API_URL}${url}`;
+  };
+
   // Validation functions
   const validateName = (name) => {
     // Allow letters, spaces, periods, hyphens, and apostrophes
@@ -308,8 +315,9 @@ export default function EditProfilePage() {
       <Box display="flex" flexDirection="column" alignItems="center" mt={15}>
         <Box sx={{ position: 'relative' }}>
           <Avatar
-            src={avatar}
+            src={resolveAvatarUrl(avatar)}
             sx={{ width: 100, height: 100, border: '2px solid #ccc' }}
+            onError={e => { e.target.onerror = null; e.target.src = resolveAvatarUrl("/uploads/default-avatar.png"); }}
           />
           <IconButton
             onClick={() => fileInputRef.current.click()}
