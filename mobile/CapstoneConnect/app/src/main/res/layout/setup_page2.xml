@@ -1,101 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/setupPage2Container"
-        android:layout_width="363dp"
-        android:layout_height="815dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="38dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/setupPage2Container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="38dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="38dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/setupPage2LogoImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_header_logo" />
+                <ImageView
+                    android:id="@+id/setupPage2LogoImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_header_logo" />
 
-        <TextView
-            android:id="@+id/setupPage2WelcomeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:fontFamily="@font/poppins_extrabold"
-            android:text="Welcome to CapstoneConnect!"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setupPage2LogoImage" />
+                <TextView
+                    android:id="@+id/setupPage2WelcomeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/poppins_extrabold"
+                    android:text="Welcome to CapstoneConnect!"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/setupPage2LogoImage" />
 
-        <TextView
-            android:id="@+id/setupPage2HeadlineText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/poppins"
-            android:text="Chat Instantly"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setupPage2WelcomeText" />
+                <TextView
+                    android:id="@+id/setupPage2HeadlineText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Chat Instantly"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/setupPage2WelcomeText" />
 
-        <TextView
-            android:id="@+id/setupPage2Subtext"
-            android:layout_width="205dp"
-            android:layout_height="79dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/poppins"
-            android:text="After you match with students communicate with them for the team collaboration"
-            android:textAlignment="center"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setupPage2HeadlineText" />
+                <TextView
+                    android:id="@+id/setupPage2Subtext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="After you match with students communicate with them for the team collaboration"
+                    android:textAlignment="center"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/setupPage2HeadlineText" />
 
-        <Button
-            android:id="@+id/setupPage2BackButton"
-            android:layout_width="156dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="368dp"
-            android:backgroundTint="#0C4278"
-            android:fontFamily="@font/poppins"
-            android:text="Back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.077"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setupPage2Subtext" />
+                <Button
+                    android:id="@+id/setupPage2BackButton"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="368dp"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#0C4278"
+                    android:fontFamily="@font/poppins"
+                    android:text="Back"
+                    app:layout_constraintEnd_toStartOf="@+id/setupPage2NextButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/setupPage2Subtext" />
 
-        <Button
-            android:id="@+id/setupPage2NextButton"
-            android:layout_width="156dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="368dp"
-            android:backgroundTint="#0C4278"
-            android:fontFamily="@font/poppins"
-            android:text="Next"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.922"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setupPage2Subtext" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/setupPage2NextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="368dp"
+                    android:backgroundTint="#0C4278"
+                    android:fontFamily="@font/poppins"
+                    android:text="Next"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/setupPage2BackButton"
+                    app:layout_constraintTop_toBottomOf="@+id/setupPage2Subtext" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
