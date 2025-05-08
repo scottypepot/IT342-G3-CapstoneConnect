@@ -247,7 +247,26 @@ export default function HomePage() {
     initializeHomePage();
   }, [navigate]);
 
-  const handleSwipeLeft = () => {
+  const handleSwipeLeft = async () => {
+    const profile = profiles[currentIndex];
+    try {
+      const userId = sessionStorage.getItem("userId");
+      // Call backend to set match status to PASSED (3-hour cooldown)
+      const response = await fetch(`${API_URL}/api/matches/${userId}_${profile.id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          status: "PASSED",
+          userId: userId
+        })
+      });
+      if (!response.ok) {
+        console.error("Failed to set pass/cooldown");
+      }
+    } catch (error) {
+      console.error("Error setting pass/cooldown:", error);
+    }
     setCurrentIndex(prev => prev + 1);
   };
 
