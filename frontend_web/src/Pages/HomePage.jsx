@@ -297,6 +297,13 @@ export default function HomePage() {
     setCurrentIndex(prev => prev + 1);
   };
   
+  // Helper to resolve avatar URL
+  const resolveAvatarUrl = (url) => {
+    if (!url) return "/uploads/default-avatar.png";
+    if (url.startsWith("http")) return url;
+    return `${API_URL}${url}`;
+  };
+
   return (
     <>
       <Helmet>

@@ -967,13 +967,14 @@ const handleAvatarChange = async (e) => {
             }}
           >
             <img
-              src={avatar}
+              src={resolveAvatarUrl(avatar)}
               alt="Profile"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
               }}
+              onError={e => { e.target.onerror = null; e.target.src = resolveAvatarUrl("/uploads/default-avatar.png"); }}
             />
             <Box
               sx={{
