@@ -8,8 +8,8 @@
     <!-- Main Container -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/setupPage8Container"
-        android:layout_width="363dp"
-        android:layout_height="815dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="38dp"
         android:layout_marginEnd="24dp"
@@ -18,10 +18,8 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Logo -->
         <ImageView
@@ -45,7 +43,6 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/setupPage8LogoImage" />
 
@@ -60,16 +57,15 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/setupPage8CongratsText" />
 
         <!-- Final Button -->
         <Button
             android:id="@+id/setupPage8NextButton"
-            android:layout_width="179dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginTop="416dp"
+            android:layout_marginTop="40dp"
             android:backgroundTint="#0C4278"
             android:fontFamily="@font/poppins"
             android:text="Okay!"
