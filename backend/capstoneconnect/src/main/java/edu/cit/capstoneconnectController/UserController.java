@@ -134,7 +134,30 @@ public class UserController {
                 }
 
                 userService.save(user); // Save the updated user
-                return ResponseEntity.ok(user);
+
+                // Build response similar to GET /profile
+                Map<String, Object> profileData = new HashMap<>();
+                profileData.put("fullName", user.getName());
+                profileData.put("role", user.getRole());
+                profileData.put("about", user.getAbout());
+                profileData.put("skills", user.getSkills());
+                profileData.put("interests", user.getInterests());
+                profileData.put("githubLink", user.getGithubLink());
+
+                // Fix the profilePicture URL
+                String profilePicturePath = user.getProfilePicture();
+                if (profilePicturePath == null || profilePicturePath.isEmpty()) {
+                    profilePicturePath = "/uploads/default-avatar.png";
+                }
+                if (!profilePicturePath.startsWith("http")) {
+                    String backendUrl = System.getenv("BACKEND_URL");
+                    if (backendUrl != null && !backendUrl.isEmpty()) {
+                        profilePicturePath = backendUrl + profilePicturePath;
+                    }
+                }
+                profileData.put("profilePicture", profilePicturePath);
+
+                return ResponseEntity.ok(profileData);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
