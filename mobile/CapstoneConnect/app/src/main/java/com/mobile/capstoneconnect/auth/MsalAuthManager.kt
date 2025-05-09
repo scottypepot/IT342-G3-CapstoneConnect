@@ -20,7 +20,8 @@ class MsalAuthManager(context: Context) {
 
     fun signIn(activity: Activity, callback: (String?) -> Unit) {
         authCallback = callback
-        msalApp.signIn(activity, null, arrayOf("User.Read"), object : AuthenticationCallback {
+        // Request the backend API scope, not just User.Read
+        msalApp.signIn(activity, null, arrayOf("api://90b56d71-38f4-4a50-9395-c331c2b6a8c0/.default"), object : AuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 callback(authenticationResult.accessToken)
             }

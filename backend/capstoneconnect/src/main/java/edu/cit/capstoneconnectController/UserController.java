@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,11 +50,17 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping("/api/auth/user")
-    public ResponseEntity<?> getAuthenticatedUser(@AuthenticationPrincipal OAuth2User oauth2User) {
-        if (oauth2User != null) {
-            String email = oauth2User.getAttribute("email");
+    public ResponseEntity<?> getAuthenticatedUser(JwtAuthenticationToken principal) {
+        if (principal != null && principal.isAuthenticated()) {
+            String email = principal.getToken().getClaim("preferred_username"); // or "email"
+            String name = principal.getToken().getClaim("name");
+            String oid = principal.getToken().getClaim("oid");
 
+            // Try to find user by email or oid
             Optional<UserEntity> userEntity = userService.findByEmail(email);
+            if (userEntity.isEmpty() && oid != null) {
+                userEntity = userService.findByOauthId(oid);
+            }
             if (userEntity.isPresent()) {
                 UserEntity user = userEntity.get();
                 Map<String, Object> userData = new HashMap<>();
