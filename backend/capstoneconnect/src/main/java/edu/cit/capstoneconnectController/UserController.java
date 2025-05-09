@@ -50,14 +50,25 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping("/api/auth/user")
-    public ResponseEntity<?> getAuthenticatedUser(JwtAuthenticationToken principal) {
-        if (principal != null && principal.isAuthenticated()) {
-            String email = principal.getToken().getClaim("preferred_username"); // or "email"
-            String name = principal.getToken().getClaim("name");
-            String oid = principal.getToken().getClaim("oid");
+    public ResponseEntity<?> getAuthenticatedUser(@AuthenticationPrincipal Object principal) {
+        String email = null;
+        String name = null;
+        String oid = null;
 
-            // Try to find user by email or oid
-            Optional<UserEntity> userEntity = userService.findByEmail(email);
+        if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2User) {
+            email = oauth2User.getAttribute("email");
+            name = oauth2User.getAttribute("name");
+            oid = oauth2User.getAttribute("oid");
+        } else if (principal instanceof org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken jwtToken) {
+            email = jwtToken.getToken().getClaim("preferred_username");
+            name = jwtToken.getToken().getClaim("name");
+            oid = jwtToken.getToken().getClaim("oid");
+        }
+
+        if (email != null || oid != null) {
+            Optional<UserEntity> userEntity = (email != null)
+                ? userService.findByEmail(email)
+                : Optional.empty();
             if (userEntity.isEmpty() && oid != null) {
                 userEntity = userService.findByOauthId(oid);
             }
