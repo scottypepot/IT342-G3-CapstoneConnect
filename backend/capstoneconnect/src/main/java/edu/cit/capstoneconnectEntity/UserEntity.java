@@ -20,8 +20,8 @@ public class UserEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(unique = true, nullable = false)
-    private String oauthId;  // Store Microsoft's OAuth ID (but NOT auto-incremented)
+    @Column(unique = true, nullable = true)
+    private String oauthId;  // Store Microsoft's OAuth ID (OID, can be null for legacy web users)
     // New fields
     private String profilePicture; // URL or file path
     private String role;
