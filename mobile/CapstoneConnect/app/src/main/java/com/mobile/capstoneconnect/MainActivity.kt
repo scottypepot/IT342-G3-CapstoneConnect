@@ -59,12 +59,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSignUpModal() {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.modal_signup)
+    val dialog = Dialog(this)
+    dialog.setContentView(R.layout.modal_signup)
 
-        val btnSignUpMicrosoft = dialog.findViewById<Button>(R.id.btnSignUpMicrosoft)
-        val btnSignOutMicrosoft = dialog.findViewById<Button>(R.id.btnSignOutMicrosoft)
-        val modalStatusText = dialog.findViewById<TextView>(R.id.modalStatusText)
+    val btnSignUpMicrosoft = dialog.findViewById<Button>(R.id.btnSignUpMicrosoft)
+    val btnSignOutMicrosoft = dialog.findViewById<Button>(R.id.btnSignOutMicrosoft)
+    val modalStatusText = dialog.findViewById<TextView>(R.id.modalStatusText)
 
         btnSignUpMicrosoft.setOnClickListener {
             AuthManager.signIn(this, object : AuthenticationCallback {
@@ -83,24 +83,32 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         modalStatusText.text = "Auth failed: ${exception.message}"
                     }
-                }
 
-                override fun onCancel() {
-                    runOnUiThread {
-                        modalStatusText.text = "User cancelled sign-in."
-                    }
-                }
-            })
-        }
-
-        btnSignOutMicrosoft.setOnClickListener {
-            AuthManager.signOut { success, error ->
-                runOnUiThread {
-                    modalStatusText.text = if (success) "Signed out successfully" else "Sign-out failed: $error"
                 }
             }
-        }
 
-        dialog.show()
+            override fun onError(exception: MsalException) {
+                runOnUiThread {
+                    modalStatusText.text = "Auth failed: ${exception.message}"
+                }
+            }
+
+            override fun onCancel() {
+                runOnUiThread {
+                    modalStatusText.text = "User cancelled sign-in."
+                }
+            }
+        })
     }
+
+    btnSignOutMicrosoft.setOnClickListener {
+        AuthManager.signOut { success, error ->
+            runOnUiThread {
+                modalStatusText.text = if (success) "Signed out successfully" else "Sign-out failed: $error"
+            }
+        }
+    }
+
+    dialog.show()
+}
 }

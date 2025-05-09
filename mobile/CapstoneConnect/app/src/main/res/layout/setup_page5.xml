@@ -1,227 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- Scrollable Content -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/setupPage5ScrollView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            android:padding="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/setupPage5ButtonContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingBottom="20dp">
+                android:layout_height="match_parent">
 
-                <!-- Logo -->
-                <FrameLayout
-                    android:id="@+id/setupPage5LogoContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:background="#EEECEC">
-
-                    <ImageView
-                        android:id="@+id/setupPage5LogoImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="App Logo"
-                        android:rotation="0"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_logo"
-                        tools:ignore="HardcodedText" />
-                </FrameLayout>
-
-                <!-- Welcome Text -->
-                <TextView
-                    android:id="@+id/setupPage5WelcomeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:fontFamily="@font/poppins_extrabold"
-                    android:text="Welcome to CapstoneConnect!"
-                    android:textAlignment="center"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <!-- Input Card -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/setupPage5InputCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginBottom="20dp"
-                    android:padding="16dp"
-                    app:cardElevation="4dp"
-                    app:cardCornerRadius="12dp">
+                <!-- Scrollable Content -->
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/setupPage5ScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:fillViewport="true"
+                    android:padding="20dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/setupPage5ButtonContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingBottom="20dp">
 
-                        <!-- Name -->
+                        <!-- Logo -->
+                        <FrameLayout
+                            android:id="@+id/setupPage5LogoContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:background="#EEECEC">
+
+                            <ImageView
+                                android:id="@+id/setupPage5LogoImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="App Logo"
+                                android:rotation="0"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_logo"
+                                tools:ignore="HardcodedText" />
+                        </FrameLayout>
+
+                        <!-- Welcome Text -->
                         <TextView
-                            android:layout_gravity="center"
+                            android:id="@+id/setupPage5WelcomeText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="40px"
-                            android:fontFamily="@font/poppins"
-                            android:text="Input your name"
-                            android:textSize="16sp" />
+                            android:layout_marginTop="40dp"
+                            android:fontFamily="@font/poppins_extrabold"
+                            android:text="Welcome to CapstoneConnect!"
+                            android:textAlignment="center"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/setupPage5InputName"
+                        <!-- Input Card -->
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/setupPage5InputCard"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:fontFamily="@font/poppins"
-                            android:gravity="center"
-                            android:hint="Your Name"
-                            android:inputType="textPersonName" />
+                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="20dp"
+                            android:padding="16dp"
+                            app:cardElevation="4dp"
+                            app:cardCornerRadius="12dp">
 
-                        <!-- Role -->
-                        <TextView
-                            android:layout_gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="Preferred Role"
-                            android:textSize="16sp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/setupPage5InputRole"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:fontFamily="@font/poppins"
-                            android:gravity="center"
-                            android:hint="Your Role"
-                            android:inputType="text" />
+                                <!-- Name -->
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="Input your name"
+                                    android:textSize="16sp" />
 
-                        <!-- About -->
-                        <TextView
-                            android:layout_gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="About You"
-                            android:textSize="16sp" />
+                                <EditText
+                                    android:id="@+id/setupPage5InputName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="16dp"
+                                    android:fontFamily="@font/poppins"
+                                    android:gravity="center"
+                                    android:hint="Your Name"
+                                    android:inputType="textPersonName" />
 
-                        <EditText
-                            android:id="@+id/setupPage5InputAbout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:fontFamily="@font/poppins"
-                            android:gravity="center"
-                            android:hint="Write something about yourself"
-                            android:inputType="textMultiLine"
-                            android:minLines="3" />
+                                <!-- Role -->
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="Preferred Role"
+                                    android:textSize="16sp" />
 
-                        <!-- Skills -->
-                        <TextView
-                            android:layout_gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="Skills"
-                            android:textSize="16sp" />
+                                <EditText
+                                    android:id="@+id/setupPage5InputRole"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="16dp"
+                                    android:fontFamily="@font/poppins"
+                                    android:gravity="center"
+                                    android:hint="Your Role"
+                                    android:inputType="text" />
 
-                        <Button
-                            android:layout_gravity="center"
-                            android:id="@+id/setupPage5SelectSkillsButton"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:backgroundTint="#4CAF50"
-                            android:fontFamily="@font/poppins"
-                            android:text="Select Skills" />
+                                <!-- About -->
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="About You"
+                                    android:textSize="16sp" />
 
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/setupPage5SkillsChipGroup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            app:chipSpacing="8dp"
-                            app:singleLine="false" />
+                                <EditText
+                                    android:id="@+id/setupPage5InputAbout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="16dp"
+                                    android:fontFamily="@font/poppins"
+                                    android:gravity="center"
+                                    android:hint="Write something about yourself"
+                                    android:inputType="textMultiLine"
+                                    android:minLines="3" />
 
-                        <!-- Interests -->
-                        <TextView
-                            android:layout_gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="Interests"
-                            android:textSize="16sp" />
+                                <!-- Skills -->
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="Skills"
+                                    android:textSize="16sp" />
 
-                        <Button
-                            android:layout_gravity="center"
-                            android:id="@+id/setupPage5SelectInterestsButton"
-                            android:layout_width="250dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:fontFamily="@font/poppins"
-                            android:backgroundTint="#4CAF50"
-                            android:text="Select Interests (max 4)" />
+                                <Button
+                                    android:layout_gravity="center"
+                                    android:id="@+id/setupPage5SelectSkillsButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:backgroundTint="#4CAF50"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="Select Skills" />
 
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/setupPage5InterestsChipGroup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="40px"
-                            app:chipSpacing="8dp"
-                            app:singleLine="false" />
+                                <com.google.android.material.chip.ChipGroup
+                                    android:id="@+id/setupPage5SkillsChipGroup"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="16dp"
+                                    app:chipSpacing="8dp"
+                                    app:singleLine="false" />
+
+                                <!-- Interests -->
+                                <TextView
+                                    android:layout_gravity="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="Interests"
+                                    android:textSize="16sp" />
+
+                                <Button
+                                    android:layout_gravity="center"
+                                    android:id="@+id/setupPage5SelectInterestsButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:fontFamily="@font/poppins"
+                                    android:backgroundTint="#4CAF50"
+                                    android:text="Select Interests (max 4)" />
+
+                                <com.google.android.material.chip.ChipGroup
+                                    android:id="@+id/setupPage5InterestsChipGroup"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="16dp"
+                                    app:chipSpacing="8dp"
+                                    app:singleLine="false" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
-        <!-- Bottom Buttons -->
-        <LinearLayout
-            android:id="@+id/setupPage5ButtonContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+                <!-- Bottom Buttons -->
+                <LinearLayout
+                    android:id="@+id/setupPage5ButtonContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
-            <Button
-                android:id="@+id/setupPage5BackButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="#0C4278"
-                android:fontFamily="@font/poppins"
-                android:text="Back" />
+                    <Button
+                        android:id="@+id/setupPage5BackButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#0C4278"
+                        android:fontFamily="@font/poppins"
+                        android:text="Back" />
 
-            <Space
-                android:layout_width="16dp"
-                android:layout_height="wrap_content" />
+                    <Space
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/setupPage5NextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="#0C4278"
-                android:fontFamily="@font/poppins"
-                android:text="Next" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <Button
+                        android:id="@+id/setupPage5NextButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#0C4278"
+                        android:fontFamily="@font/poppins"
+                        android:text="Next" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
