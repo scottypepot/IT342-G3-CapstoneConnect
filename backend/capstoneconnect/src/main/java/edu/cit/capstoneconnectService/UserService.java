@@ -47,6 +47,13 @@ public class UserService {
         System.out.println("🔍 Checking database before saving - Exists? " + existingUser.isPresent());
 
         if (existingUser.isPresent()) {
+            UserEntity user = existingUser.get();
+            // If the user exists but oauthId is missing, set it (for mobile OID login)
+            if (user.getOauthId() == null && oauthId != null) {
+                user.setOauthId(oauthId);
+                userRepository.saveAndFlush(user);
+                System.out.println("✅ Updated existing user with oauthId: " + oauthId);
+            }
             System.out.println("✅ User already exists: " + email);
             return false; // Not a first-time user
         }
