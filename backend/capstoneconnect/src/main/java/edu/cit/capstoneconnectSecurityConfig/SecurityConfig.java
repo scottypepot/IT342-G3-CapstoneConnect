@@ -94,7 +94,9 @@ public class SecurityConfig {
                     response.setStatus(200);
                 })
                 .permitAll()
-            );
+            )
+            // Enable JWT Bearer token authentication for APIs
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt());
 
         return http.build();
     }
