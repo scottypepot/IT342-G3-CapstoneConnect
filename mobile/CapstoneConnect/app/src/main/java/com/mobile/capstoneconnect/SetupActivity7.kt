@@ -27,10 +27,14 @@ package com.mobile.capstoneconnect
                             finish()
                         }
 
+                        val userId = intent.getLongExtra("USER_ID", -1L)
+
                         findViewById<Button>(R.id.setupPage7NextButton).setOnClickListener {
                             val intent = Intent(this, SetupActivity8::class.java)
                             // Pass the image URI to the next activity if needed
                             intent.putExtra("SELECTED_IMAGE_URI", selectedImageUri)
+                            // Pass the user ID to SetupActivity8
+                            intent.putExtra("USER_ID", userId)
                             startActivity(intent)
                         }
                     }

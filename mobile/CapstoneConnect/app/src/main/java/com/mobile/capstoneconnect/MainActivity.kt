@@ -1,16 +1,23 @@
 package com.mobile.capstoneconnect
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAuthenticationResult
 import com.microsoft.identity.client.exception.MsalException
+import com.mobile.capstoneconnect.util.ApiResult
+import com.mobile.capstoneconnect.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnGetStarted: Button
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +31,31 @@ class MainActivity : AppCompatActivity() {
         btnGetStarted.setOnClickListener {
             showSignUpModal()
         }
+
+        // Observe authentication result
+        userViewModel.authUser.observe(this, Observer { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    val user = result.data
+                    Toast.makeText(this, "firstTimeUser: ${user.firstTimeUser}", Toast.LENGTH_LONG).show()
+                    if (user.firstTimeUser == true) {
+                        // Navigate to setup page
+                        val intent = Intent(this, SetupActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        // Navigate to find page
+                        val intent = Intent(this, FindActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+                is ApiResult.Error -> {
+                    Toast.makeText(this, "Auth error: ${result.message}", Toast.LENGTH_LONG).show()
+                }
+                is ApiResult.Loading -> {
+                    // Show loading (optional)
+                }
+            }
+        })
     }
 
     private fun showSignUpModal() {
@@ -38,7 +70,12 @@ class MainActivity : AppCompatActivity() {
             AuthManager.signIn(this, object : AuthenticationCallback {
                 override fun onSuccess(result: IAuthenticationResult) {
                     runOnUiThread {
+                        // Log the access token for debugging
+                        android.util.Log.d("MSAL", "Access Token: ${result.accessToken}")
                         modalStatusText.text = "Hello, ${result.account.username}"
+                        // Fetch authenticated user from backend
+                        userViewModel.fetchAuthenticatedUser(result.accessToken)
+                        dialog.dismiss()
                     }
                 }
 

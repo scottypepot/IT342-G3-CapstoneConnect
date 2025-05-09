@@ -40,6 +40,9 @@ class SetupActivity5 : AppCompatActivity() {
         val nextButton = findViewById<Button>(R.id.setupPage5NextButton)
         val backButton = findViewById<Button>(R.id.setupPage5BackButton)
 
+        // Retrieve USER_ID from the intent
+        val userId = intent.getLongExtra("USER_ID", -1L)
+
         // Skills selection dialog
         selectSkillsButton.setOnClickListener {
             val checkedItems = skillsList.map { selectedSkills.contains(it) }.toBooleanArray()
@@ -99,6 +102,7 @@ class SetupActivity5 : AppCompatActivity() {
                 putExtra("USER_SKILLS", skills)
                 putExtra("USER_INTERESTS", interests)
                 putExtra("SELECTED_IMAGE_URI", selectedImageUri)
+                putExtra("USER_ID", userId)
             }
 
             Toast.makeText(this, "Proceeding to next page", Toast.LENGTH_SHORT).show()
