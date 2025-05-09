@@ -65,22 +65,28 @@ public class UserController {
             oid = jwtToken.getToken().getClaim("oid");
         }
 
-        if (email != null || oid != null) {
-            Optional<UserEntity> userEntity = (email != null)
-                ? userService.findByEmail(email)
-                : Optional.empty();
-            if (userEntity.isEmpty() && oid != null) {
-                userEntity = userService.findByOauthId(oid);
-            }
-            if (userEntity.isPresent()) {
-                UserEntity user = userEntity.get();
-                Map<String, Object> userData = new HashMap<>();
-                userData.put("id", user.getId());
-                userData.put("name", user.getName());
-                userData.put("email", user.getEmail());
-                userData.put("firstTimeUser", user.isFirstTimeUser());
-                return ResponseEntity.ok(userData);
-            }
+        Optional<UserEntity> userEntity = Optional.empty();
+        if (email != null) {
+            userEntity = userService.findByEmail(email);
+        }
+        if (userEntity.isEmpty() && oid != null) {
+            userEntity = userService.findByOauthId(oid);
+        }
+
+        // If not found, create the user (for mobile/JWT flow)
+        if (userEntity.isEmpty() && email != null && oid != null && name != null) {
+            userService.saveUserIfNotExists(oid, email, name);
+            userEntity = userService.findByEmail(email);
+        }
+
+        if (userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("id", user.getId());
+            userData.put("name", user.getName());
+            userData.put("email", user.getEmail());
+            userData.put("firstTimeUser", user.isFirstTimeUser());
+            return ResponseEntity.ok(userData);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
     }
