@@ -9,7 +9,7 @@ import com.microsoft.identity.client.SingleAccountPublicClientApplication
 import com.microsoft.identity.client.exception.MsalException
 
 object AuthManager {
-    private const val SCOPES = "User.Read"
+    private const val SCOPES = "api://90b56d71-38f4-4a50-9395-c331c2b6a8c0/user_impersonation"
     private var msalApp: ISingleAccountPublicClientApplication? = null
 
     /**

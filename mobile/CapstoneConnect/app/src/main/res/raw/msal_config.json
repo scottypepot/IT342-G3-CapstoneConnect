@@ -10,7 +10,7 @@
       "audience": {
         "type": "AzureADMyOrg",
         "tenant_id": "823cde44-4433-456d-b801-bdf0ab3d41fc",
-        "authority_url": "https://login.microsoftonline.com/823cde44-4433-456d-b801-bdf0ab3d41fc"
+        "authority_url": "https://login.microsoftonline.com/823cde44-4433-456d-b801-bdf0ab3d41fc/v2.0"
       }
     }
   ]
