@@ -16,10 +16,14 @@ import {
     ListItem,
     OutlinedInput,
     ListItemText,
-    Menu
+    Menu,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import AddIcon from '@mui/icons-material/Add';
+import { API_URL } from '../config/api';
+
 const steps = [
     {
       title: 'Welcome to CapstoneConnect!',
@@ -47,12 +51,7 @@ const steps = [
       description: 'Fill out your information below',
     },
     {
-      title: 'Welcome to CapstoneConnect!',
-      subtitle: 'Update your Profile',
-      description: 'Fill out your information below',
-    },
-    {
-      title: 'Congrats! You’ve completed the first step!',
+      title: 'Congrats! You have completed the first step!',
       subtitle: '',
       description: 'You can now connect with other students!',
     },
@@ -69,6 +68,15 @@ const steps = [
     'Database Management',
     'Machine Learning',
     'Mobile Development'
+  ];
+  
+  const PREFER_ROLES = [
+    'Backend Developer',
+    'Frontend Developer',
+    'Mobile Developer',
+    'Project Manager',
+    'UI/UX Designer',
+    'Technical Writer'
   ];
   
   const INTERESTS = [
@@ -181,11 +189,19 @@ export default function WelcomeModal({ open, onClose }) {
     fullName: '',
     role: '',
     skills: '',
+    githublink: '',
   });
   const [skills, setSkills] = useState([]);
   const [interests, setInterests] = useState([]);
   const [interestsModalOpen, setInterestsModalOpen] = useState(false);
-  const [skillsOpen, setSkillsOpen] = useState(false);
+  const [skillsAnchorEl, setSkillsAnchorEl] = useState(null);
+  const [githubError, setGithubError] = useState('');
+  const [roleAnchorEl, setRoleAnchorEl] = useState(null);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastSeverity, setToastSeverity] = useState('error');
+  const [nameError, setNameError] = useState('');
+
   useEffect(() => {
     const fetchUserData = async () => {
         try {
@@ -194,9 +210,9 @@ export default function WelcomeModal({ open, onClose }) {
                 console.log("✅ User authenticated:", user);
                 setFormData((prev) => ({
                     ...prev,
-                    fullName: user.name,
-                    role: user.role,
-                    about: user.about,
+                    fullName: user.name || '',
+                    role: user.role || '',
+                    about: user.about || '',
                     skills: user.skills || [],
                     interests: user.interests || [],
                     githubLink: user.githubLink || "",
@@ -211,7 +227,27 @@ export default function WelcomeModal({ open, onClose }) {
 }, []);
 
   const fileInputRef = useRef();
-  const handleNext = () => setStep(prev => Math.min(prev + 1, steps.length - 1));
+  const handleNext = () => {
+    // If we're on the step with GitHub input, validate it first
+    if (step === 3 && formData.githublink) {
+      const isValid = validateGithubLink(formData.githublink);
+      if (!isValid) {
+        return; // Don't proceed if invalid
+      }
+    }
+
+    // Validate name field
+    if (step === 3 && !validateName(formData.fullName)) {
+      return;
+    }
+
+    // Validate required fields before proceeding
+    if (step === 3 && !validateRequiredFields()) {
+      return;
+    }
+
+    setStep(prev => Math.min(prev + 1, steps.length - 1));
+  };
   const handleBack = () => setStep(prev => Math.max(prev - 1, 0));
   const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState("");
   const handleFinish = async () => {
@@ -226,7 +262,7 @@ export default function WelcomeModal({ open, onClose }) {
         const profilePictureUrl = uploadedAvatarUrl || "/uploads/default-avatar.png";
 
         // Update user profile
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+        const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -243,7 +279,7 @@ export default function WelcomeModal({ open, onClose }) {
 
         if (response.ok) {
             // Update firstTimeUser status
-            await fetch(`http://localhost:8080/api/users/${userId}/first-time`, {
+            await fetch(`${API_URL}/api/users/${userId}/first-time`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -252,7 +288,10 @@ export default function WelcomeModal({ open, onClose }) {
                 }),
             });
             
-            onClose();
+            setToastMessage('Profile setup complete! Find your potential matches now!');
+            setToastSeverity('success');
+            setToastOpen(true);
+            setTimeout(() => onClose(), 1200);
         } else {
             console.error("❌ Failed to update profile");
         }
@@ -276,7 +315,7 @@ const handleAvatarChange = async (e) => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("http://localhost:8080/api/upload-profile-picture", {
+      const response = await fetch(`${API_URL}/api/upload-profile-picture`, {
           method: "POST",
           body: formData,
           credentials: 'include',
@@ -302,18 +341,29 @@ const handleAvatarChange = async (e) => {
     setResume(e.target.files[0].name);
   };
 
-  const handleInputChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleRoleOpen = (event) => {
+    setRoleAnchorEl(event.currentTarget);
   };
 
-  const [anchorEl, setAnchorEl] = useState(null); // anchor for dropdown
-
-  const handleOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleRoleClose = () => {
+    setRoleAnchorEl(null);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleRoleSelect = (role) => {
+    setFormData(prev => ({ ...prev, role }));
+    handleRoleClose();
+  };
+
+  const isRoleOpen = Boolean(roleAnchorEl);
+
+  const isSkillsOpen = Boolean(skillsAnchorEl);
+
+  const handleSkillsOpen = (event) => {
+    setSkillsAnchorEl(event.currentTarget);
+  };
+
+  const handleSkillsClose = () => {
+    setSkillsAnchorEl(null);
   };
 
   const handleSkillSelect = (skill) => {
@@ -324,8 +374,70 @@ const handleAvatarChange = async (e) => {
     }
   };
 
-  const isOpen = Boolean(anchorEl);
+  const validateGithubLink = (link) => {
+    if (!link) return true; // Allow empty field
+    const githubRegex = /^https:\/\/github\.com\/[a-zA-Z0-9-]+(\/[a-zA-Z0-9-]+)*\/?$/;
+    return githubRegex.test(link);
+  };
 
+  const validateName = (name) => {
+    // Check for URL patterns
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    if (urlPattern.test(name)) {
+      setNameError('URLs are not allowed in the name field');
+      return false;
+    }
+    setNameError('');
+    return true;
+  };
+
+  const validateRequiredFields = () => {
+    if (!formData.role) {
+      setToastMessage('Please select your preferred role');
+      setToastSeverity('error');
+      setToastOpen(true);
+      return false;
+    }
+    if (!formData.about) {
+      setToastMessage('Please fill out the About you section');
+      setToastSeverity('error');
+      setToastOpen(true);
+      return false;
+    }
+    if (skills.length === 0) {
+      setToastMessage('Please select at least one skill');
+      setToastSeverity('error');
+      setToastOpen(true);
+      return false;
+    }
+    if (interests.length === 0) {
+      setToastMessage('Please select at least one interest');
+      setToastSeverity('error');
+      setToastOpen(true);
+      return false;
+    }
+    return true;
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: value || ''
+    }));
+    
+    if (name === 'githublink') {
+      const isValid = validateGithubLink(value);
+      if (!isValid && value) {
+        setToastMessage('Please enter a valid GitHub URL (e.g., https://github.com/capstoneconnect)');
+        setToastOpen(true);
+      }
+    }
+
+    if (name === 'fullName') {
+      validateName(value);
+    }
+  };
 
   const renderStepContent = () => {
     switch (step) {
@@ -457,19 +569,7 @@ const handleAvatarChange = async (e) => {
 </Box>
     </Box>
   );
-      case 3:
-        return (
-          <Box mt={3}>
-            <Button variant="outlined" component="label">
-              Upload Resume
-              <Input type="file" hidden onChange={handleResumeChange} />
-            </Button>
-            {resume && (
-              <Typography mt={2}>Uploaded: {resume}</Typography>
-            )}
-          </Box>
-        );
-        case 4:
+        case 3:
             return (
               <Box mt={3} display="flex" flexDirection="column" gap={2} sx={{mt: 9}}>
                 <TextField
@@ -477,6 +577,8 @@ const handleAvatarChange = async (e) => {
                   label="Your Name"
                   value={formData.fullName}
                   onChange={handleInputChange}
+                  error={!!nameError}
+                  helperText={nameError}
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -492,32 +594,103 @@ const handleAvatarChange = async (e) => {
                     },
                     '& .MuiInputBase-input': {
                       color: 'white',
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: '#ff4444',
                     }
                   }}
                 />
-                <TextField
-                  name="role"
-                  label="Prefer Role"
-                  value={formData.role}
-                  onChange={handleInputChange}
-                  fullWidth
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: 'white',
-                      },
-                      '&:hover fieldset': {
-                        borderColor: 'white',
-                      },
-                    },
-                    '& .MuiInputLabel-root': {
+                {formData.role ? (
+                  <Box
+                    onClick={handleRoleOpen}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      border: '1px solid white',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: 2,
+                        border: '1px solid #6bd5ce',
+                        backgroundColor: '#6bd5ce',
+                        color: 'black',
+                        fontWeight: 500,
+                        fontSize: '1rem',
+                      }}
+                    >
+                      {formData.role}
+                    </Box>
+                    <IconButton
+                      onClick={handleRoleOpen}
+                      sx={{ color: 'white', ml: 1 }}
+                    >
+                      <AddIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                  </Box>
+                ) : (
+                  <Box
+                    onClick={handleRoleOpen}
+                    sx={{
+                      border: '1px solid white',
+                      borderRadius: '8px',
+                      padding: '12px',
                       color: 'white',
-                    },
-                    '& .MuiInputBase-input': {
-                      color: 'white',
-                    }
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    Select your preferred role
+                    <AddIcon sx={{ color: 'white' }} />
+                  </Box>
+                )}
+
+                <Menu
+                  anchorEl={roleAnchorEl}
+                  open={isRoleOpen}
+                  onClose={handleRoleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
                   }}
-                />
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  slotProps={{
+                    sx: {
+                      bgcolor: '#222',
+                      color: 'white',
+                      mt: 1,
+                    },
+                  }}
+                >
+                  {PREFER_ROLES.map((role) => (
+                    <MenuItem
+                      key={role}
+                      selected={formData.role === role}
+                      onClick={() => handleRoleSelect(role)}
+                      sx={{
+                        backgroundColor: formData.role === role ? '#444' : 'transparent',
+                        '&:hover': {
+                          backgroundColor: '#555',
+                        },
+                      }}
+                    >
+                      {role}
+                    </MenuItem>
+                  ))}
+                </Menu>
+
                 <TextField
                   name="about"
                   label="About you"
@@ -543,7 +716,7 @@ const handleAvatarChange = async (e) => {
                 />
                 {skills.length > 0 ? (
         <Box
-          onClick={handleOpen}
+          onClick={handleSkillsOpen}
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -575,7 +748,7 @@ const handleAvatarChange = async (e) => {
             ))}
           </Box>
           <IconButton
-            onClick={handleOpen}
+            onClick={handleSkillsOpen}
             sx={{ color: 'white', ml: 1 }}
           >
             <AddIcon sx={{ fontSize: 20 }} />
@@ -583,7 +756,7 @@ const handleAvatarChange = async (e) => {
         </Box>
       ) : (
         <Box
-          onClick={handleOpen}
+          onClick={handleSkillsOpen}
           sx={{
             border: '1px solid white',
             borderRadius: '8px',
@@ -600,11 +773,10 @@ const handleAvatarChange = async (e) => {
         </Box>
       )}
 
-      {/* Dropdown Menu */}
       <Menu
-        anchorEl={anchorEl}
-        open={isOpen}
-        onClose={handleClose}
+        anchorEl={skillsAnchorEl}
+        open={isSkillsOpen}
+        onClose={handleSkillsClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -641,7 +813,15 @@ const handleAvatarChange = async (e) => {
                 {interests.length === 0 ? (
   <Button 
     variant="outlined" 
-    onClick={() => setInterestsModalOpen(true)}
+    onClick={() => {
+      if (interests.length >= 4) {
+        setToastMessage('4 project interests only are allowed');
+        setToastSeverity('error');
+        setToastOpen(true);
+      } else {
+        setInterestsModalOpen(true);
+      }
+    }}
     sx={{
       color: 'white',
       height: 55,
@@ -703,6 +883,8 @@ const handleAvatarChange = async (e) => {
                   label="Github Link"
                   value={formData.githublink}
                   onChange={handleInputChange}
+                  error={!!githubError}
+                  helperText={githubError}
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -712,19 +894,25 @@ const handleAvatarChange = async (e) => {
                       '&:hover fieldset': {
                         borderColor: 'white',
                       },
+                      '&.Mui-focused fieldset': {
+                        borderColor: 'white',
+                      },
                     },
                     '& .MuiInputLabel-root': {
                       color: 'white',
                     },
                     '& .MuiInputBase-input': {
                       color: 'white',
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: '#ff4444',
                     }
                   }}
                 />
 
               </Box>
             );
-            case 5:
+            case 4:
   return (
     <Box
       sx={{
@@ -779,13 +967,14 @@ const handleAvatarChange = async (e) => {
             }}
           >
             <img
-              src={avatar}
+              src={resolveAvatarUrl(avatar)}
               alt="Profile"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
               }}
+              onError={e => { e.target.onerror = null; e.target.src = resolveAvatarUrl("/uploads/default-avatar.png"); }}
             />
             <Box
               sx={{
@@ -880,7 +1069,6 @@ const handleAvatarChange = async (e) => {
                   href={formData.githublink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#0077cc' }}
                 >
                   {formData.githublink}
                 </a>
@@ -982,11 +1170,16 @@ const handleAvatarChange = async (e) => {
         <Button
           onClick={handleNext}
           variant="contained"
+          disabled={step === 3 && formData.githublink && !validateGithubLink(formData.githublink)}
           sx={{
             backgroundColor: '#0C4278',
             color: 'white',
             width: { xs: '100%', sm: 130 },
             height: 50,
+            '&:disabled': {
+              backgroundColor: 'grey.400',
+              color: 'white',
+            },
           }}
         >
           Next
@@ -1024,6 +1217,20 @@ const handleAvatarChange = async (e) => {
       selectedInterests  ={interests}
       setSelectedInterests  =  {  setInterests  }
     />
+    <Snackbar
+      open={toastOpen}
+      autoHideDuration={6000}
+      onClose={() => setToastOpen(false)}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+    >
+      <Alert 
+        onClose={() => setToastOpen(false)} 
+        severity={toastSeverity}
+        sx={{ width: '100%' }}
+      >
+        {toastMessage}
+      </Alert>
+    </Snackbar>
     </>
   );
 }

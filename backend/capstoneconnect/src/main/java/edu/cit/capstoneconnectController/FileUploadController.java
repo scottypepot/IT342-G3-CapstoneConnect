@@ -10,26 +10,38 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "${FRONTEND_URL}", allowCredentials = "true")
 public class FileUploadController {
 
-    private final String uploadDir = System.getProperty("user.dir") + File.separator + "uploads";
+    private final String uploadDir;
 
     public FileUploadController() {
+        // Use persistent storage path in Render, fallback to local path for development
+        String persistentPath = System.getenv("RENDER_PERSISTENT_DISK_PATH");
+        if (persistentPath != null && !persistentPath.isEmpty()) {
+            uploadDir = persistentPath + File.separator + "uploads";
+        } else {
+            uploadDir = System.getProperty("user.dir") + File.separator + "uploads";
+        }
+
         // Create uploads directory when controller is initialized
         try {
             Files.createDirectories(Paths.get(uploadDir));
+            System.out.println("✅ Upload directory created at: " + uploadDir);
+            
             // Copy default avatar if it doesn't exist
             Path defaultAvatarPath = Paths.get(uploadDir, "default-avatar.png");
             if (!Files.exists(defaultAvatarPath)) {
-                // You need to ensure default-avatar.png exists in your resources
                 Files.copy(getClass().getResourceAsStream("/static/default-avatar.png"), defaultAvatarPath);
+                System.out.println("✅ Default avatar copied to: " + defaultAvatarPath);
             }
         } catch (IOException e) {
+            System.err.println("❌ Error initializing upload directory: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -37,6 +49,18 @@ public class FileUploadController {
     @PostMapping("/upload-profile-picture")
     public ResponseEntity<?> uploadProfilePicture(@RequestParam("file") MultipartFile file) {
         try {
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Please select a file to upload"));
+            }
+
+            // Validate file type
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Only image files are allowed"));
+            }
+
             // Generate a unique file name to prevent overwrites
             String originalFilename = file.getOriginalFilename();
             String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
@@ -44,7 +68,7 @@ public class FileUploadController {
             Path filePath = Paths.get(uploadDir, fileName);
 
             // Save the file
-            Files.copy(file.getInputStream(), filePath);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             // Log the file save operation
             System.out.println("✅ File saved successfully at: " + filePath);

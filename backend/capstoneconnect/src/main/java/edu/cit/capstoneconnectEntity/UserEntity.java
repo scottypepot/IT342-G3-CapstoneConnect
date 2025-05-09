@@ -24,7 +24,6 @@ public class UserEntity {
     private String oauthId;  // Store Microsoft's OAuth ID (but NOT auto-incremented)
     // New fields
     private String profilePicture; // URL or file path
-    private String resume; // URL or file path
     private String role;
     private String about;
     private boolean firstTimeUser = true;
@@ -51,7 +50,6 @@ public class UserEntity {
         this.email = email;
         this.name = name;
         this.profilePicture = ""; // Default value
-        this.resume = "";         // Default value
         this.role = "User";       // Default value
         this.about = "";          // Default value
         this.skills = new ArrayList<>(); // Default value
@@ -93,14 +91,6 @@ public class UserEntity {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
-    }
-
-    public String getResume() {
-        return resume;
-    }
-
-    public void setResume(String resume) {
-        this.resume = resume;
     }
 
     public String getRole() {

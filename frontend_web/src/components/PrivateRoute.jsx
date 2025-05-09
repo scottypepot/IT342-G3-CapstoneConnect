@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -11,20 +12,27 @@ const PrivateRoute = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/user', {
+      const response = await fetch(`${API_URL}/api/auth/user`, {
         credentials: 'include'
       });
 
       if (response.ok) {
         const userData = await response.json();
-        sessionStorage.setItem('userId', userData.id);
+        // Store user data in sessionStorage only if it's not already there
+        if (!sessionStorage.getItem('userId')) {
+          sessionStorage.setItem('userId', userData.id);
+        }
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
+        // Clear any existing session data
+        sessionStorage.clear();
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
       setIsAuthenticated(false);
+      // Clear any existing session data
+      sessionStorage.clear();
     }
   };
 

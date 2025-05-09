@@ -5,6 +5,7 @@ import Logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Pages/NavBar';
 import { getAuthenticatedUser } from "./authService";
+import { API_URL } from '../config/api';
 
 
 export default function ProfilePage() {
@@ -52,7 +53,7 @@ export default function ProfilePage() {
 
         try {
             console.log("🔍 Fetching profile data for user ID:", userId);
-            const response = await fetch(`http://localhost:8080/api/users/${userId}/profile`, {
+            const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
                 credentials: "include",
             });
 
@@ -103,6 +104,14 @@ useEffect(() => {
   }
 }, []); // Empty dependency array ensures this runs only once
 
+  // Helper to resolve avatar URL
+  const resolveAvatarUrl = (url) => {
+    if (!url) return "/uploads/default-avatar.png";
+    // If already absolute URL, return as is
+    if (url.startsWith("http")) return url;
+    // Otherwise, prepend backend API URL
+    return `${API_URL}${url}`;
+  };
 
   return (
     <>
@@ -119,7 +128,7 @@ useEffect(() => {
           justifyContent: 'space-between', 
           alignItems: 'center', 
           px: 40, // same as ml/mr below to align with the card
-          mt: 20 
+          mt: 10, // margin top for spacing 
         }}>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#003366', fontSize: 28 }}>
               Profile
@@ -134,7 +143,7 @@ useEffect(() => {
         {/* Profile Content */}
         <Box
               sx={{
-                mt: 15,
+                mt: 9.5,
                 ml: 15,
                 mr: 15,
                 display: 'flex',
@@ -171,7 +180,7 @@ useEffect(() => {
                     }}
                   >
                     <img
-                      src={avatar}
+                      src={resolveAvatarUrl(avatar)}
                       className="profile-image"
                       alt="Profile"
                       style={{
@@ -179,6 +188,7 @@ useEffect(() => {
                         height: '100%',
                         objectFit: 'cover',
                       }}
+                      onError={e => { e.target.onerror = null; e.target.src = resolveAvatarUrl("/uploads/default-avatar.png"); }}
                     />
                     <Box
                       sx={{
