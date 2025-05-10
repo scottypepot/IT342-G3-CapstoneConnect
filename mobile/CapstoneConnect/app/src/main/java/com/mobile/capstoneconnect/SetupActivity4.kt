@@ -10,10 +10,14 @@ package com.mobile.capstoneconnect
 
         class SetupActivity4 : AppCompatActivity() {
             private var selectedImageUri: String? = null
+            private var userId: Long = -1L
 
             override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
                 setContentView(R.layout.setup_page4)
+
+                // Get the user ID from the intent
+                userId = intent.getLongExtra("USER_ID", -1L)
 
                 // Get the image URI from the intent
                 selectedImageUri = intent.getStringExtra("SELECTED_IMAGE_URI")
@@ -31,6 +35,7 @@ package com.mobile.capstoneconnect
                     val intent = Intent(this, SetupActivity5::class.java)
                     // Pass the image URI to the next activity if needed
                     intent.putExtra("SELECTED_IMAGE_URI", selectedImageUri)
+                    intent.putExtra("USER_ID", userId)
                     startActivity(intent)
                 }
             }

@@ -1,5 +1,6 @@
 package com.mobile.capstoneconnect.network
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -41,19 +42,53 @@ interface ApiService {
 
     // Get user profile
     @GET("/api/users/{id}/profile")
-    fun getUserProfile(@Path("id") id: Long): Call<UserProfile>
+    fun getUserProfile(@Header("Authorization") token: String, @Path("id") id: Long): Call<UserProfile>
 
     // Update user profile
     @PUT("/api/users/{id}/profile")
-    fun updateUserProfile(@Path("id") id: Long, @Body updates: Map<String, Any>): Call<UserProfile>
+    fun updateUserProfile(
+        @Header("Authorization") token: String,
+        @Path("id") id: Long,
+        @Body updates: ProfileUpdateRequest
+    ): Call<UserProfile>
 
     // Get potential matches
     @GET("/api/users/{id}/potential-matches")
-    fun getPotentialMatches(@Path("id") id: Long): Call<List<MatchUser>>
+    fun getPotentialMatches(
+        @Header("Authorization") token: String,
+        @Path("id") id: Long
+    ): Call<List<MatchUser>>
 
     // Update firstTimeUser flag
     @PUT("/api/users/{id}/first-time")
-    fun updateFirstTimeUser(@Path("id") id: Long, @Body body: Map<String, Boolean>): Call<Void>
+    fun updateFirstTimeUser(
+        @Header("Authorization") token: String,
+        @Path("id") id: Long,
+        @Body body: Map<String, Boolean>
+    ): Call<Void>
+
+    // Accept a match (swipe right)
+    @POST("/api/users/{userId}/matches")
+    fun createMatch(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: Long,
+        @Body body: Map<String, Long>
+    ): Call<ResponseBody>
+
+    // Reject/pass a match (swipe left)
+    @PUT("/api/matches/{matchId}/status")
+    fun updateMatchStatus(
+        @Header("Authorization") token: String,
+        @Path("matchId") matchId: String,
+        @Body body: Map<String, String>
+    ): Call<Void>
+
+    // Get user matches (with matchId)
+    @GET("/api/users/{userId}/matches")
+    fun getUserMatches(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: Long
+    ): Call<List<UserMatch>>
 
     // Add more endpoints as needed (chat, etc)
 }

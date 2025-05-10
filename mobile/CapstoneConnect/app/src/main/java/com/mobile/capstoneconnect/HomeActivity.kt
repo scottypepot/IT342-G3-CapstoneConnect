@@ -30,7 +30,10 @@
                         true
                     }
                     R.id.navigation_profile -> {
-                        startActivity(Intent(this, ProfileActivity::class.java))
+                        val intent = Intent(this, ProfileActivity::class.java)
+                        intent.putExtra("accessToken", SessionManager.accessToken)
+                        intent.putExtra("userId", SessionManager.userId ?: -1L)
+                        startActivity(intent)
                         true
                     }
                     else -> false

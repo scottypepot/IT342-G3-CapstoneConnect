@@ -5,6 +5,8 @@ import com.mobile.capstoneconnect.network.ApiService
 import com.mobile.capstoneconnect.network.AuthenticatedUser
 import com.mobile.capstoneconnect.network.UserProfile
 import com.mobile.capstoneconnect.network.MatchUser
+import com.mobile.capstoneconnect.network.ProfileUpdateRequest
+import com.mobile.capstoneconnect.network.UserMatch
 import retrofit2.Call
 
 class UserRepository {
@@ -14,19 +16,23 @@ class UserRepository {
         return apiService.getAuthenticatedUser("Bearer $token")
     }
 
-    fun getUserProfile(id: Long): Call<UserProfile> {
-        return apiService.getUserProfile(id)
+    fun getUserProfile(token: String, id: Long): Call<UserProfile> {
+        return apiService.getUserProfile("Bearer $token", id)
     }
 
-    fun updateUserProfile(id: Long, updates: Map<String, Any>): Call<UserProfile> {
-        return apiService.updateUserProfile(id, updates)
+    fun updateUserProfile(token: String, id: Long, updates: ProfileUpdateRequest): Call<UserProfile> {
+        return apiService.updateUserProfile("Bearer $token", id, updates)
     }
 
-    fun getPotentialMatches(id: Long): Call<List<MatchUser>> {
-        return apiService.getPotentialMatches(id)
+    fun getPotentialMatches(token: String, id: Long): Call<List<MatchUser>> {
+        return apiService.getPotentialMatches("Bearer $token", id)
     }
 
-    fun updateFirstTimeUser(id: Long, isFirstTime: Boolean): Call<Void> {
-        return apiService.updateFirstTimeUser(id, mapOf("firstTimeUser" to isFirstTime))
+    fun updateFirstTimeUser(token: String, id: Long, isFirstTime: Boolean): Call<Void> {
+        return apiService.updateFirstTimeUser("Bearer $token", id, mapOf("firstTimeUser" to isFirstTime))
+    }
+
+    fun getUserMatches(token: String, userId: Long): Call<List<UserMatch>> {
+        return apiService.getUserMatches("Bearer $token", userId)
     }
 }

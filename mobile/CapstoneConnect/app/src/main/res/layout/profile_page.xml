@@ -215,6 +215,27 @@
                                     android:background="?attr/selectableItemBackgroundBorderless"
                                     android:contentDescription="Edit Interest"/>
                             </LinearLayout>
+
+                            <!-- GitHub Link -->
+                            <TextView
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="GitHub Link"
+                                android:textStyle="bold"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/poppins"
+                                android:layout_marginBottom="4dp"/>
+                            <EditText
+                                android:id="@+id/profileGithubLink"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="https://github.com/yourusername"
+                                android:fontFamily="@font/poppins"
+                                android:inputType="textUri"
+                                android:maxLines="1"
+                                android:background="@android:color/transparent"
+                                android:layout_marginBottom="12dp"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
