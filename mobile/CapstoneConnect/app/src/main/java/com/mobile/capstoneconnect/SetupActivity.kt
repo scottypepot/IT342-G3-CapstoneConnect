@@ -11,7 +11,10 @@ class SetupActivity : AppCompatActivity() {
         setContentView(R.layout.setup_page)
 
         findViewById<Button>(R.id.setupNextButton).setOnClickListener {
-            startActivity(Intent(this, SetupActivity2::class.java))
+            val intent = Intent(this, SetupActivity2::class.java)
+            // Pass the user ID from SessionManager
+            intent.putExtra("USER_ID", SessionManager.userId)
+            startActivity(intent)
         }
     }
 }

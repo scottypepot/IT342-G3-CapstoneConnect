@@ -202,6 +202,13 @@ export default function WelcomeModal({ open, onClose }) {
   const [toastSeverity, setToastSeverity] = useState('error');
   const [nameError, setNameError] = useState('');
 
+  // Helper to resolve avatar URL
+  const resolveAvatarUrl = (url) => {
+    if (!url) return "/uploads/default-avatar.png";
+    if (url.startsWith("http")) return url;
+    return `${API_URL}${url}`;
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
         try {

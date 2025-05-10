@@ -10,12 +10,17 @@ class SetupActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setup_page2)
 
+        // Get the user ID from the intent
+        val userId = intent.getLongExtra("USER_ID", -1L)
+
         findViewById<Button>(R.id.setupPage2BackButton).setOnClickListener {
             finish()
         }
 
         findViewById<Button>(R.id.setupPage2NextButton).setOnClickListener {
-            startActivity(Intent(this, SetupActivity3::class.java))
+            val intent = Intent(this, SetupActivity3::class.java)
+            intent.putExtra("USER_ID", userId)
+            startActivity(intent)
         }
     }
 }

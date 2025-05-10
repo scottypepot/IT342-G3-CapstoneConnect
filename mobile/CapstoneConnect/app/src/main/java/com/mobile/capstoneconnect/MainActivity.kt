@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity() {
             when (result) {
                 is ApiResult.Success -> {
                     val user = result.data
+                    // Store userId globally for navigation
+                    SessionManager.userId = user.id
                     Toast.makeText(this, "firstTimeUser: ${user.firstTimeUser}", Toast.LENGTH_LONG).show()
                     if (user.firstTimeUser == true) {
                         // Navigate to setup page
@@ -73,6 +75,8 @@ class MainActivity : AppCompatActivity() {
                         // Log the access token for debugging
                         android.util.Log.d("MSAL", "Access Token: ${result.accessToken}")
                         modalStatusText.text = "Hello, ${result.account.username}"
+                        // Store access token globally for navigation
+                        SessionManager.accessToken = result.accessToken
                         // Fetch authenticated user from backend
                         userViewModel.fetchAuthenticatedUser(result.accessToken)
                         dialog.dismiss()

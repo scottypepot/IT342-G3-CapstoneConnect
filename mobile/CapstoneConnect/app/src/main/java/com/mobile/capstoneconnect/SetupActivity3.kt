@@ -13,21 +13,29 @@ class SetupActivity3 : AppCompatActivity() {
             // Image selected, start SetupActivity4 with the image URI
             val intent = Intent(this, SetupActivity4::class.java).apply {
                 putExtra("SELECTED_IMAGE_URI", uri.toString())
+                putExtra("USER_ID", userId)
             }
             startActivity(intent)
         }
     }
 
+    private var userId: Long = -1L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setup_page3)
+
+        // Get the user ID from the intent
+        userId = intent.getLongExtra("USER_ID", -1L)
 
         findViewById<Button>(R.id.setupPage3BackButton).setOnClickListener {
             finish()
         }
 
         findViewById<Button>(R.id.setupPage3NextButton).setOnClickListener {
-            startActivity(Intent(this, SetupActivity4::class.java))
+            val intent = Intent(this, SetupActivity4::class.java)
+            intent.putExtra("USER_ID", userId)
+            startActivity(intent)
         }
 
         findViewById<Button>(R.id.setupPage3UploadPhotoButton).setOnClickListener {

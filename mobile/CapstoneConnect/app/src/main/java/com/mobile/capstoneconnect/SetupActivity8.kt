@@ -15,23 +15,29 @@ class SetupActivity8 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setup_page8)
 
-        // Replace with actual user ID (e.g., from intent or session)
-        val userId = intent.getLongExtra("USER_ID", -1L)
         val nextButton = findViewById<Button>(R.id.setupPage8NextButton)
 
         nextButton.setOnClickListener {
-            if (userId != -1L) {
-                userViewModel.updateFirstTimeUser(userId, false)
-            } else {
-                Toast.makeText(this, "User ID missing", Toast.LENGTH_SHORT).show()
+            // Always set SessionManager.userId from intent if not set
+            if (SessionManager.userId == null) {
+                val userIdFromIntent = intent.getLongExtra("USER_ID", -1L)
+                if (userIdFromIntent != -1L) {
+                    SessionManager.userId = userIdFromIntent
+                }
             }
+            val userId = SessionManager.userId
+            if (userId == null) {
+                Toast.makeText(this, "User ID is missing. Please log in again.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            userViewModel.updateFirstTimeUser(userId, false)
         }
 
         userViewModel.firstTimeUpdate.observe(this) { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    // Navigate to Home/Find page after successful update
-                    val intent = Intent(this, HomeActivity::class.java)
+                    // Navigate to Find page after successful update
+                    val intent = Intent(this, FindActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()

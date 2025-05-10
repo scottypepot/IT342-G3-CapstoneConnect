@@ -7,9 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.activity.viewModels
+import com.mobile.capstoneconnect.viewmodel.UserViewModel
+import com.mobile.capstoneconnect.util.ApiResult
 
 class SetupActivity5 : AppCompatActivity() {
     private var selectedImageUri: String? = null
+    private val userViewModel: UserViewModel by viewModels()
 
     private val skillsList = listOf(
         "Javascript", "Python", "Java", "C++", "React", "Node.js",
@@ -42,6 +46,25 @@ class SetupActivity5 : AppCompatActivity() {
 
         // Retrieve USER_ID from the intent
         val userId = intent.getLongExtra("USER_ID", -1L)
+
+        // Fetch user profile to get the name
+        if (userId != -1L) {
+            userViewModel.fetchUserProfile(userId)
+            userViewModel.userProfile.observe(this) { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        // Auto-populate name from user profile
+                        nameInput.setText(result.data.fullName)
+                    }
+                    is ApiResult.Error -> {
+                        Toast.makeText(this, "Failed to fetch user profile: ${result.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    is ApiResult.Loading -> {
+                        // Optionally show loading
+                    }
+                }
+            }
+        }
 
         // Skills selection dialog
         selectSkillsButton.setOnClickListener {
