@@ -55,14 +55,20 @@ public class UserController {
         String name = null;
         String oid = null;
 
+        // Log the principal class and claims for debugging
+        System.out.println("[DEBUG] Principal class: " + principal.getClass().getName());
         if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth2User) {
+            System.out.println("[DEBUG] OAuth2User attributes: " + oauth2User.getAttributes());
             email = oauth2User.getAttribute("email");
             name = oauth2User.getAttribute("name");
             oid = oauth2User.getAttribute("oid");
         } else if (principal instanceof org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken jwtToken) {
+            System.out.println("[DEBUG] JWT claims: " + jwtToken.getToken().getClaims());
             email = jwtToken.getToken().getClaim("preferred_username");
             name = jwtToken.getToken().getClaim("name");
             oid = jwtToken.getToken().getClaim("oid");
+        } else {
+            System.out.println("[DEBUG] Unknown principal type: " + principal);
         }
 
         Optional<UserEntity> userEntity = Optional.empty();
