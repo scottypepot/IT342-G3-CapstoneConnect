@@ -63,10 +63,15 @@ public class UserController {
             name = oauth2User.getAttribute("name");
             oid = oauth2User.getAttribute("oid");
         } else if (principal instanceof org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken jwtToken) {
-            System.out.println("[DEBUG] JWT claims: " + jwtToken.getToken().getClaims());
+            System.out.println("[DEBUG] JWT claims (JwtAuthenticationToken): " + jwtToken.getToken().getClaims());
             email = jwtToken.getToken().getClaim("preferred_username");
             name = jwtToken.getToken().getClaim("name");
             oid = jwtToken.getToken().getClaim("oid");
+        } else if (principal instanceof org.springframework.security.oauth2.jwt.Jwt jwt) {
+            System.out.println("[DEBUG] JWT claims (Jwt): " + jwt.getClaims());
+            email = jwt.getClaim("preferred_username");
+            name = jwt.getClaim("name");
+            oid = jwt.getClaim("oid");
         } else {
             System.out.println("[DEBUG] Unknown principal type: " + principal);
         }
